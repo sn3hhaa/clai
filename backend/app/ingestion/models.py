@@ -13,3 +13,13 @@ class DocumentContent:
     filename: str
     pages: list[PageContent]
     page_count: int
+
+
+@dataclass
+class DocumentChunk:
+    chunk_id: str
+    document_id: str
+    page_number: int
+    section: str | None
+    clause: str | None
+    text: str
