@@ -58,10 +58,16 @@ def test_answer_generator_uses_evidence():
     generator = AnswerGenerator(api_key="test-key")
 
     fake_response = SimpleNamespace(
-        output_text="The cleaning fee is $200. [Evidence 1]"
+        choices=[
+            SimpleNamespace(
+                message=SimpleNamespace(
+                    content="The cleaning fee is $200. [Evidence 1]"
+                )
+            )
+        ]
     )
 
-    generator.client.responses.create = lambda **kwargs: fake_response
+    generator.client.chat.completions.create = lambda **kwargs: fake_response
 
     evidence_pack = make_evidence_pack(sufficient=True)
 

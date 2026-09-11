@@ -1,14 +1,18 @@
 import os
+import time
 
+from dotenv import load_dotenv
 from openai import OpenAI
 
 from .retrieval.evidence_pack import EvidencePack
+
+load_dotenv()
 
 
 class AnswerGenerator:
     """
     Generate grounded answers from an EvidencePack using an
-    OpenAI-compatible model endpoint.
+    OpenAI-compatible chat completion endpoint.
 
     The model is instructed to use only the supplied evidence.
     """
@@ -16,19 +20,19 @@ class AnswerGenerator:
     def __init__(
         self,
         api_key: str | None = None,
-        base_url: str = "https://opencode.ai/zen/v1",
+        base_url: str = "https://openrouter.ai/api/v1",
         model: str | None = None,
     ) -> None:
-        self.api_key = api_key or os.getenv("OPENCODE_API_KEY")
+        self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
 
         if not self.api_key:
             raise ValueError(
-                "OPENCODE_API_KEY environment variable is required."
+                "OPENROUTER_API_KEY environment variable is required."
             )
 
         self.model = model or os.getenv(
             "CLAI_LLM_MODEL",
-            "gpt-5.6-luna",
+            "nvidia/nemotron-3.5-lightning:free",
         )
 
         self.client = OpenAI(
@@ -73,6 +77,9 @@ Rules:
 - If the evidence does not support an answer, say that the evidence is insufficient.
 - When making a factual statement, reference the relevant evidence number.
 - Preserve important amounts, dates, deadlines, and conditions exactly.
+- Do not make assumptions about missing information.
+- Keep the answer concise and directly answer the user's question.
+- Do not reveal or describe your internal reasoning process.
 """
 
         prompt = f"""
@@ -83,10 +90,37 @@ Agreement evidence:
 {evidence_text}
 """
 
-        response = self.client.responses.create(
+        start = time.perf_counter()
+
+        response = self.client.chat.completions.create(
             model=self.model,
-            instructions=instructions,
-            input=prompt,
+            messages=[
+                {
+                    "role": "system",
+                    "content": instructions,
+                },
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+            ],
+            max_tokens=200,
+            extra_body={
+                "reasoning": {
+                    "enabled": False,
+                },
+            },
         )
 
-        return response.output_text.strip()
+        elapsed = time.perf_counter() - start
+
+        print(f"LLM latency: {elapsed:.3f}s")
+
+        content = response.choices[0].message.content
+
+        if not content:
+            raise RuntimeError(
+                "The LLM returned an empty response."
+            )
+
+        return content.strip()

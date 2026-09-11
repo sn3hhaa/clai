@@ -1,3 +1,5 @@
+import time
+
 from sentence_transformers import CrossEncoder
 
 from ..ingestion.models import DocumentChunk
@@ -36,7 +38,13 @@ class Reranker:
             for chunk, _ in results
         ]
 
+        start = time.perf_counter()
+
         scores = self.model.predict(pairs)
+
+        elapsed = time.perf_counter() - start
+
+        print(f"Reranker latency: {elapsed:.3f}s")
 
         reranked = [
             (chunk, float(score))
