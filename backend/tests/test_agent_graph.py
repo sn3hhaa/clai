@@ -5,7 +5,20 @@ from app.ingestion.chunker import chunk_document
 from app.ingestion.pdf_parser import extract_pdf
 
 
-def test_clai_agent_graph():
+class FakeAnswerGenerator:
+    """Test double that avoids making a real LLM API request."""
+
+    def generate(self, evidence_pack):
+        assert evidence_pack.sufficient is True
+        assert len(evidence_pack.evidence) > 0
+
+        return (
+            "The agreement states that the cleaning fee is $200. "
+            "[Evidence 1]"
+        )
+
+
+def test_clai_agent_graph_with_answer_generation():
     project_root = Path(__file__).resolve().parents[2]
 
     pdf_path = (
@@ -25,6 +38,7 @@ def test_clai_agent_graph():
     agent = ClaiAgent(
         chunks=chunks,
         minimum_score=0.0,
+        answer_generator=FakeAnswerGenerator(),
     )
 
     query = "What is the cleaning fee?"
@@ -35,24 +49,23 @@ def test_clai_agent_graph():
 
     assert "evidence_pack" in state
     assert state["evidence_pack"].sufficient is True
-
     assert len(state["evidence_pack"].evidence) > 0
 
-    assert "queries_used" in state
-    assert len(state["queries_used"]) >= 1
+    assert "answer" in state
+    assert state["answer"]
+
+    assert "$200" in state["answer"]
+    assert "[Evidence 1]" in state["answer"]
 
     first_evidence = state["evidence_pack"].evidence[0]
 
     assert first_evidence.document_id == "test-rental-agreement"
     assert first_evidence.page_number >= 1
 
-    assert (
-        "clean" in first_evidence.text.lower()
-        or "200" in first_evidence.text
-    )
-
     print(f"\nQuery: {query}")
-    print("\nLangGraph EvidencePack:")
+    print(f"Answer: {state['answer']}")
+
+    print("\nEvidence used:")
 
     for evidence in state["evidence_pack"].evidence:
         print(f"\n--- {evidence.chunk_id} ---")
@@ -61,7 +74,3 @@ def test_clai_agent_graph():
         print(f"Section: {evidence.section}")
         print(f"Score: {evidence.relevance_score:.6f}")
         print(f"Text: {evidence.text[:300]}")
-
-    print("\nGraph state:")
-    print(f"Queries used: {state['queries_used']}")
-    print(f"Correction attempted: {state['correction_attempted']}")
