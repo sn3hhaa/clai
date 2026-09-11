@@ -74,3 +74,46 @@ def test_answer_generator_uses_evidence():
     answer = generator.generate(evidence_pack)
 
     assert answer == "The cleaning fee is $200. [Evidence 1]"
+
+
+def test_answer_generator_streams_evidence():
+    generator = AnswerGenerator(api_key="test-key")
+
+    fake_chunks = [
+        SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    delta=SimpleNamespace(
+                        content="The cleaning fee "
+                    )
+                )
+            ]
+        ),
+        SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    delta=SimpleNamespace(
+                        content="is $200. [Evidence 1]"
+                    )
+                )
+            ]
+        ),
+    ]
+
+    def fake_stream_request(**kwargs):
+        assert kwargs["stream"] is True
+        assert kwargs["max_tokens"] == 200
+
+        return iter(fake_chunks)
+
+    generator.client.chat.completions.create = fake_stream_request
+
+    evidence_pack = make_evidence_pack(sufficient=True)
+
+    chunks = list(
+        generator.generate_stream(evidence_pack)
+    )
+
+    answer = "".join(chunks)
+
+    assert answer == "The cleaning fee is $200. [Evidence 1]"

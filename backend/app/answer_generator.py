@@ -1,5 +1,6 @@
 import os
 import time
+from collections.abc import Iterator
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -40,16 +41,13 @@ class AnswerGenerator:
             base_url=base_url,
         )
 
-    def generate(self, evidence_pack: EvidencePack) -> str:
+    def _build_messages(
+        self,
+        evidence_pack: EvidencePack,
+    ) -> list[dict[str, str]]:
         """
-        Generate an answer using only the evidence in the EvidencePack.
+        Build the grounded prompt used by both normal and streaming generation.
         """
-
-        if not evidence_pack.sufficient:
-            return (
-                "I couldn't find sufficient evidence in the agreement "
-                "to answer that confidently."
-            )
 
         evidence_text = "\n\n".join(
             (
@@ -90,20 +88,38 @@ Agreement evidence:
 {evidence_text}
 """
 
+        return [
+            {
+                "role": "system",
+                "content": instructions,
+            },
+            {
+                "role": "user",
+                "content": prompt,
+            },
+        ]
+
+    def generate(
+        self,
+        evidence_pack: EvidencePack,
+    ) -> str:
+        """
+        Generate a complete grounded answer.
+        """
+
+        if not evidence_pack.sufficient:
+            return (
+                "I couldn't find sufficient evidence in the agreement "
+                "to answer that confidently."
+            )
+
+        messages = self._build_messages(evidence_pack)
+
         start = time.perf_counter()
 
         response = self.client.chat.completions.create(
             model=self.model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": instructions,
-                },
-                {
-                    "role": "user",
-                    "content": prompt,
-                },
-            ],
+            messages=messages,
             max_tokens=200,
             extra_body={
                 "reasoning": {
@@ -124,3 +140,60 @@ Agreement evidence:
             )
 
         return content.strip()
+
+    def generate_stream(
+        self,
+        evidence_pack: EvidencePack,
+    ) -> Iterator[str]:
+        """
+        Stream a grounded answer as text chunks arrive from the LLM.
+
+        Also measures time to first token and total streaming latency.
+        """
+
+        if not evidence_pack.sufficient:
+            yield (
+                "I couldn't find sufficient evidence in the agreement "
+                "to answer that confidently."
+            )
+            return
+
+        messages = self._build_messages(evidence_pack)
+
+        start = time.perf_counter()
+        first_chunk_time: float | None = None
+
+        stream = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            max_tokens=200,
+            extra_body={
+                "reasoning": {
+                    "enabled": False,
+                },
+            },
+            stream=True,
+        )
+
+        for chunk in stream:
+            if not chunk.choices:
+                continue
+
+            content = chunk.choices[0].delta.content
+
+            if content:
+                if first_chunk_time is None:
+                    first_chunk_time = time.perf_counter()
+
+                    print(
+                        "LLM time to first token: "
+                        f"{first_chunk_time - start:.3f}s"
+                    )
+
+                yield content
+
+        elapsed = time.perf_counter() - start
+
+        print(
+            f"LLM streaming latency: {elapsed:.3f}s"
+        )
