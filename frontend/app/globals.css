@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+/* ── Clai design tokens ─────────────────────────────────────────────── */
+:root {
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --surface-2: #f3f2ec;
+  --ink: #1d2320;
+  --ink-2: #4a524e;
+  --ink-3: #6f7873;
+  --line: #e4e2da;
+  --line-strong: #cfccc1;
+  --mint: #2e9e85; /* graphics & marks only */
+  --mint-ink: #1f7a66; /* text on light backgrounds (AA) */
+  --mint-soft: #ddf3ec;
+  --seafoam: #7fe0c4;
+  --amber-ink: #8a5a12;
+  --amber-soft: #fbf0dc;
+  --danger: #b4372f;
+  --danger-soft: #fbe7e5;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-mint: var(--mint);
+  --color-mint-ink: var(--mint-ink);
+  --color-mint-soft: var(--mint-soft);
+  --color-seafoam: var(--seafoam);
+  --color-amber-ink: var(--amber-ink);
+  --color-amber-soft: var(--amber-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
+  --tracking-tightest: -0.045em;
+}
+
+html {
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--bg);
+  min-height: 100dvh;
+}
+
+::selection {
+  background: var(--mint-soft);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--mint-ink);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Subtle editorial grid used behind some sections. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--line) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--line) 70%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Monospace label: "── 01 / UPLOAD" */
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* PDF text-layer evidence highlight */
+.evidence-mark {
+  background: color-mix(in oklab, var(--seafoam) 55%, transparent);
+  color: transparent;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
