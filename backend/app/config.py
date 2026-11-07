@@ -71,9 +71,13 @@ class Settings(BaseSettings):
     gradium_api_key: str = ""
     gradium_voice_id: str = ""
     whisper_model: str = "base.en"
+    # auto = NVIDIA GPU when CUDA wheels from requirements-gpu.txt are installed, else CPU.
+    whisper_device: Literal["auto", "cpu", "cuda"] = "auto"
     whisper_compute_type: str = "int8"
     piper_voice: str = "en_US-lessac-medium"
-    piper_voice_dir: Path | None = None
+    # Piper runs as a separate process (its own venv, GPL-3.0) exposing HTTP /synthesize.
+    piper_url: str = "http://127.0.0.1:5000"
+    voice_greeting: bool = True
 
     # The voice worker calls the API at this address.
     api_internal_url: str = "http://127.0.0.1:8000"
@@ -94,10 +98,6 @@ class Settings(BaseSettings):
     @property
     def resolved_qdrant_path(self) -> Path:
         return self.qdrant_path or (self.data_dir / "qdrant")
-
-    @property
-    def resolved_piper_dir(self) -> Path:
-        return self.piper_voice_dir or (self.data_dir / "models" / "piper")
 
     @property
     def llm_configured(self) -> bool:

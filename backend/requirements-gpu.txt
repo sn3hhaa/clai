@@ -1,0 +1,5 @@
+# Optional: NVIDIA GPU acceleration for faster-whisper (CUDA 12 / cuDNN 9 runtime wheels).
+# Install on top of requirements.txt:  uv pip install -r requirements-gpu.txt
+# Needs an NVIDIA driver; WHISPER_DEVICE=auto falls back to CPU without one.
+nvidia-cublas-cu12==12.9.2.10
+nvidia-cudnn-cu12==9.28.1.4
