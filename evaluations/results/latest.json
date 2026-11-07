@@ -1,0 +1,502 @@
+{
+  "run_at": "2026-11-07T18:42:42+00:00",
+  "mode": "extractive",
+  "llm_model": null,
+  "machine": "Windows AMD64, Python 3.12.16",
+  "counts": {
+    "questions": 23,
+    "answerable": 19,
+    "unanswerable": 4
+  },
+  "metrics": {
+    "retrieval_hit_at_1": 0.947,
+    "retrieval_hit_at_5": 1.0,
+    "citation_accuracy": 0.947,
+    "answer_correctness": 1.0,
+    "grounded_rate": 1.0,
+    "false_abstention_rate": 0.0,
+    "abstention_accuracy": 1.0,
+    "latency_ms_p50": 732.9,
+    "latency_ms_p95": 2132.8
+  },
+  "rows": [
+    {
+      "id": "s01",
+      "question": "What is the termination notice period?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "8.1"
+      ],
+      "top": [
+        "8.1",
+        "8.2",
+        "8.3"
+      ],
+      "ms": 596.4,
+      "answer": "Clause 8.1 (page 2) says: “Either party may terminate this agreement with 30 days' written notice.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s02",
+      "question": "Can I end the contract early?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "8.1"
+      ],
+      "top": [
+        "8.1",
+        "8.2",
+        "8.3"
+      ],
+      "ms": 1825.4,
+      "answer": "Clause 8.1 (page 2) says: “Either party may terminate this agreement with 30 days' written notice.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s03",
+      "question": "What happens if the other party breaches the agreement?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "8.2"
+      ],
+      "top": [
+        "8.2",
+        "10.2",
+        "5.1"
+      ],
+      "ms": 731.6,
+      "answer": "Clause 8.2 (page 2) says: “Either party may terminate this Agreement immediately by written notice if the other party commits a material breach and fails to remedy it within 10 days of being notified.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s04",
+      "question": "And what if they breach it?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "8.2"
+      ],
+      "top": [
+        "8.2",
+        "8.1",
+        "8.3"
+      ],
+      "ms": 750.6,
+      "answer": "Clause 8.2 (page 2) says: “Either party may terminate this Agreement immediately by written notice if the other party commits a material breach and fails to remedy it within 10 days of being notified.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s05",
+      "question": "How much is the monthly fee?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "4.1"
+      ],
+      "top": [
+        "4.1",
+        "4.3",
+        "4.2"
+      ],
+      "ms": 674.6,
+      "answer": "Clause 4.1 (page 1) says: “The Client shall pay the Provider a fixed monthly fee of INR 1,80,000, exclusive of applicable taxes.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s06",
+      "question": "When are invoices due?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "4.2"
+      ],
+      "top": [
+        "4.2",
+        "3.2",
+        "7.2"
+      ],
+      "ms": 866.5,
+      "answer": "Clause 4.2 (page 1) says: “The Provider shall invoice monthly in arrears. Each invoice is payable within 15 days of receipt.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s07",
+      "question": "What interest applies to late payments?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "4.3"
+      ],
+      "top": [
+        "4.3",
+        "4.2",
+        "4.1"
+      ],
+      "ms": 622.4,
+      "answer": "Clause 4.3 (page 1) says: “Late payments accrue interest at 1.5% per month on the overdue amount until paid in full.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s08",
+      "question": "How long is the initial term?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "3.2"
+      ],
+      "top": [
+        "3.2",
+        "3.1",
+        "5.2"
+      ],
+      "ms": 810.3,
+      "answer": "Clause 3.2 (page 1) says: “After the initial term, this Agreement renews automatically for successive periods of twelve (12) months unless either party gives notice of non-renewal at least 60 days before the end of the then-current term.”",
+      "hit1": false,
+      "hit5": true,
+      "citation_ok": false,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s09",
+      "question": "Does the agreement renew automatically?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "3.2"
+      ],
+      "top": [
+        "3.2",
+        "8.2",
+        "8.1"
+      ],
+      "ms": 697.2,
+      "answer": "Clause 3.2 (page 1) says: “After the initial term, this Agreement renews automatically for successive periods of twelve (12) months unless either party gives notice of non-renewal at least 60 days before the end of the then-current term.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s10",
+      "question": "How long do confidentiality obligations last?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "5.2"
+      ],
+      "top": [
+        "5.2",
+        "3.2",
+        "3.1"
+      ],
+      "ms": 658.7,
+      "answer": "Clause 5.2 (page 2) says: “The obligations in this Section 5 survive for three (3) years after this Agreement ends.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s11",
+      "question": "Who owns the deliverables?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "6.1"
+      ],
+      "top": [
+        "6.1",
+        "1.2",
+        null
+      ],
+      "ms": 649.0,
+      "answer": "Clause 6.1 (page 2) says: “Upon full payment, all rights in the Deliverables are assigned to the Client. The Provider retains ownership of its pre-existing tools and know-how.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s12",
+      "question": "Is there a cap on liability?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "7.2"
+      ],
+      "top": [
+        "7.2",
+        "7.1",
+        "10.2"
+      ],
+      "ms": 2010.2,
+      "answer": "Clause 7.2 (page 2) says: “Each party's total liability under this Agreement is limited to the fees paid by the Client in the twelve (12) months before the claim arose.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s13",
+      "question": "Which law governs this agreement?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "9.1"
+      ],
+      "top": [
+        "9.1",
+        "9.2",
+        "7.2"
+      ],
+      "ms": 837.0,
+      "answer": "Clause 9.1 (page 2) says: “This Agreement is governed by the laws of India.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s14",
+      "question": "Where would disputes be resolved?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "9.2"
+      ],
+      "top": [
+        "9.2",
+        "9.1",
+        "10.2"
+      ],
+      "ms": 700.9,
+      "answer": "Clause 9.2 (page 2) says: “The parties shall first try to resolve any dispute through good-faith negotiation for 30 days. Unresolved disputes are subject to the exclusive jurisdiction of the courts at Bengaluru.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s15",
+      "question": "Can the agreement be assigned to someone else?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "10.2"
+      ],
+      "top": [
+        "10.2",
+        "5.1",
+        "8.2"
+      ],
+      "ms": 804.5,
+      "answer": "Clause 10.2 (page 2) says: “Neither party may assign this Agreement without the other party's prior written consent.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s16",
+      "question": "How often must the provider send performance reports?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "2.2"
+      ],
+      "top": [
+        "2.2",
+        "4.2",
+        "2.1"
+      ],
+      "ms": 732.9,
+      "answer": "Clause 2.2 (page 1) says: “The Provider shall deliver a monthly performance report to the Client within five business days after the end of each calendar month.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "s17",
+      "question": "What is the dress code for employees?",
+      "grounding": "insufficient",
+      "generation": "extractive",
+      "cited": [],
+      "top": [
+        "2.1",
+        "8.3",
+        "7.1"
+      ],
+      "ms": 2132.2,
+      "answer": "I couldn't find this in the agreement.",
+      "abstained_correctly": true
+    },
+    {
+      "id": "s18",
+      "question": "How many vacation days do I get?",
+      "grounding": "insufficient",
+      "generation": "extractive",
+      "cited": [],
+      "top": [
+        "3.2",
+        "2.2",
+        "3.1"
+      ],
+      "ms": 2215.9,
+      "answer": "I couldn't find this in the agreement.",
+      "abstained_correctly": true
+    },
+    {
+      "id": "s19",
+      "question": "Is there a non-compete clause?",
+      "grounding": "insufficient",
+      "generation": "extractive",
+      "cited": [],
+      "top": [
+        "3.2",
+        "10.2",
+        "7.1"
+      ],
+      "ms": 2132.8,
+      "answer": "I couldn't find this in the agreement.",
+      "abstained_correctly": true
+    },
+    {
+      "id": "n01",
+      "question": "What is the termination notice period?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "3.1"
+      ],
+      "top": [
+        "3.1",
+        "3.2",
+        "2.1"
+      ],
+      "ms": 404.7,
+      "answer": "Clause 3.1 (page 1) says: “This Agreement may be terminated by either party upon 90 days' written notice to the other party.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "n02",
+      "question": "How long does confidentiality last after termination?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "3.2"
+      ],
+      "top": [
+        "3.2",
+        "3.1",
+        "2.1"
+      ],
+      "ms": 607.6,
+      "answer": "Clause 3.2 (page 1) says: “Confidentiality obligations continue for five (5) years after termination.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "n03",
+      "question": "What is the purpose of this agreement?",
+      "grounding": "grounded",
+      "generation": "extractive",
+      "cited": [
+        "1.1"
+      ],
+      "top": [
+        "1.1",
+        "3.1",
+        null
+      ],
+      "ms": 598.9,
+      "answer": "Clause 1.1 (page 1) says: “The parties wish to exchange information to evaluate a possible software partnership.”",
+      "hit1": true,
+      "hit5": true,
+      "citation_ok": true,
+      "answer_ok": true,
+      "grounded": true,
+      "false_abstain": false
+    },
+    {
+      "id": "n04",
+      "question": "What is the monthly fee?",
+      "grounding": "insufficient",
+      "generation": "extractive",
+      "cited": [],
+      "top": [
+        "3.2",
+        "2.1",
+        "1.1"
+      ],
+      "ms": 1117.1,
+      "answer": "I couldn't find this in the agreement.",
+      "abstained_correctly": true
+    }
+  ]
+}

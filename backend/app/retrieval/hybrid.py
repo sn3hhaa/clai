@@ -90,12 +90,20 @@ class HybridRetriever:
             if cid in chunks and chunks[cid].document_id == document_id
         ]
 
-    def rerank(self, query: str, candidates: list[Candidate], top_n: int) -> list[Candidate]:
+    def rerank(
+        self, query: str, candidates: list[Candidate], top_n: int, alternatives: list[str] | None = None
+    ) -> list[Candidate]:
+        """Score candidates with the cross-encoder. With `alternatives` (e.g. corrective rewrites in
+        agreement vocabulary), each passage keeps its best score across the question and rewrites,
+        so a paraphrased question ("cap on liability") can still match the clause's wording."""
         if not candidates:
             return []
         if self.reranker is None:
             return candidates[:top_n]
-        scores = self.reranker.score(query, [search_text(c.chunk) for c in candidates])
-        for candidate, score in zip(candidates, scores, strict=True):
+        passages = [search_text(c.chunk) for c in candidates]
+        best = self.reranker.score(query, passages)
+        for alternative in alternatives or []:
+            best = [max(a, b) for a, b in zip(best, self.reranker.score(alternative, passages), strict=True)]
+        for candidate, score in zip(candidates, best, strict=True):
             candidate.rerank_score = score
         return sorted(candidates, key=lambda c: c.score, reverse=True)[:top_n]

@@ -12,6 +12,7 @@ from app.retrieval.lexical import tokenize
 from app.validation import split_sentences
 
 ABSTAIN_TEXT = "I couldn't find this in the agreement."
+MAX_WHOLE_QUOTE_CHARS = 320
 ABSTAIN_SPOKEN = "I couldn't find that in this agreement. Try asking about a specific clause or term."
 
 SYSTEM_PROMPT = """You are Clai, an assistant that explains what ONE agreement says.
@@ -93,12 +94,20 @@ def generate_with_llm(llm: LLM, question: str, history: list[tuple[str, str]], e
 
 
 def generate_extractive(question: str, evidence: list[Candidate]) -> Draft:
-    """Quote the best-matching sentence(s) of the top passage. Never paraphrases."""
+    """Quote the top passage. Never paraphrases.
+
+    Short clauses are quoted whole: picking one sentence by word overlap can select the wrong one
+    ("invoice monthly in arrears" instead of "payable within 15 days"). Long passages are trimmed
+    to the best-matching sentence so spoken answers stay short.
+    """
     top = evidence[0]
-    terms = set(tokenize(question))
-    sentences = split_sentences(top.chunk.text) or [top.chunk.text]
-    ranked = sorted(sentences, key=lambda s: len(terms & set(tokenize(s))), reverse=True)
-    quote = ranked[0].strip()
+    text = top.chunk.text.strip()
+    if len(text) <= MAX_WHOLE_QUOTE_CHARS:
+        quote = text
+    else:
+        terms = set(tokenize(question))
+        sentences = split_sentences(text) or [text]
+        quote = max(sentences, key=lambda s: len(terms & set(tokenize(s)))).strip()
     where = f"Clause {top.chunk.clause}" if top.chunk.clause else "The agreement"
     page = f" (page {top.chunk.page_number})"
     answer = f"{where}{page} says: “{quote}”"

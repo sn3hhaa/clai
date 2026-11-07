@@ -102,7 +102,14 @@ def build_graph(retriever: HybridRetriever, llm: LLM | None, *, top_n: int = 5, 
         return {"candidates": merged, "rounds": state.get("rounds", 0) + 1}
 
     def rerank(state: AgentState) -> dict[str, Any]:
-        return {"evidence": retriever.rerank(state["resolved_question"], state["candidates"], top_n)}
+        # After a corrective search, also score against its first rewrite (the question's own words
+        # plus agreement synonyms). The broader intent expansion is deliberately not used here.
+        alternatives = state["queries"][:1] if state.get("retries", 0) > 0 else None
+        return {
+            "evidence": retriever.rerank(
+                state["resolved_question"], state["candidates"], top_n, alternatives=alternatives
+            )
+        }
 
     def grade_evidence(state: AgentState) -> dict[str, Any]:
         sufficient, reason = grade(state["resolved_question"], state["evidence"])

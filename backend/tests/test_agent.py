@@ -112,3 +112,19 @@ def test_conversation_summary(clai: Clai, services_pdf: bytes) -> None:
     assert summary.sources[0].clause == "8.1" and summary.sources[0].page_number == 2
     assert summary.ended_at is not None
     assert len(summary.transcript) == 4
+
+
+def test_paraphrased_questions_are_answered_not_abstained(clai: Clai, services_pdf: bytes) -> None:
+    # The cross-encoder scores these near zero against the clause wording; the corrective rewrite
+    # ("cap" -> "limitation of liability", "end" -> "terminate") must recover them.
+    doc = clai.ingest("services.pdf", services_pdf)
+    cap = clai.ask(doc.id, "Is there a cap on liability?")
+    assert cap.grounding == "grounded" and cap.evidence[0].clause == "7.2"
+    early = clai.ask(doc.id, "Can I end the contract early?")
+    assert early.grounding == "grounded" and early.evidence[0].clause in {"8.1", "8.2"}
+
+
+def test_extractive_answer_quotes_short_clause_whole(clai: Clai, services_pdf: bytes) -> None:
+    doc = clai.ingest("services.pdf", services_pdf)
+    result = clai.ask(doc.id, "When are invoices due?")
+    assert "invoice monthly in arrears" in result.answer and "15 days" in result.answer
