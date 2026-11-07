@@ -10,8 +10,8 @@ proven) · **Verified** (a test or documented check passed). Last updated 2026-1
 | Toolchain: Python 3.12 (uv), gh CLI, Node 26 | Verified | `setup.ps1` ran end to end on Windows 11 |
 | Safe reset of the earlier local attempt | Verified | `Desktop/clai-checkpoints/clai-pre-reset-20261107-130700.zip` |
 | Project memory: CLAUDE, RULES, PRD, ARCHITECTURE, PLAN, TASKS | Completed | |
-| GitHub CLI authentication | **Blocked** | owner must run `gh auth login --web` and `gh auth setup-git` |
-| Push to `origin/main` | **Blocked** | waiting on auth; all work is in local commits |
+| GitHub CLI authentication | Verified | logged in as sn3hhaa |
+| Push to `origin/main` | Verified | pushed 2026-11-08; `main` protected (no force-push or deletion) |
 
 ## Backend
 
@@ -56,9 +56,10 @@ proven) · **Verified** (a test or documented check passed). Last updated 2026-1
 | Task | Status | Evidence |
 |---|---|---|
 | Docs site (MkDocs), ADRs, README, community files, templates | Completed | `mkdocs build --strict` passes locally |
-| CI and Pages workflows | Completed | not yet run on GitHub (no push yet) |
-| GitHub Pages enabled + deployed | Pending | after push: Settings → Pages → Source: GitHub Actions |
-| Repo description, topics, website URL, social preview | Pending | needs gh auth; preview image upload is manual in Settings |
+| CI and Pages workflows | Verified | CI green on Linux (backend, frontend + Playwright, docs, audit) |
+| GitHub Pages enabled + deployed | Verified | https://sn3hhaa.github.io/clai/ and /docs/ live; crawl passes |
+| Repo description, topics, website URL | Verified | set via gh |
+| Social preview image | Pending | manual upload: Settings → Social preview → `assets/branding/social/github-social-preview.png` |
 | `setup.sh` / `dev.sh` / `check.sh` run on Linux/macOS | Pending | syntax-checked only; CI exercises Linux installs |
 
 ## Pending configuration (owner input)

@@ -29,10 +29,9 @@ Last updated: 2026-11-08
 
 Phases 1–7 are built and tested locally. Phase 8 (release) is mostly done; what's left:
 
-1. **Push**: needs `gh auth login` by the owner.
-2. **Enable GitHub Pages** (Source: GitHub Actions), then check that CI and Pages go green
-   and the site loads at https://sn3hhaa.github.io/clai/.
-3. **Repository metadata**: description, topics, website URL, social preview image.
+1. Upload the social preview image (Settings → Social preview).
+2. Review Dependabot PRs.
+3. Keep CI green.
 4. **Human voice acceptance test**, then mark voice Verified.
 5. Optional: LLM-mode evaluation with an OpenRouter key.
 
