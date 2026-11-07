@@ -21,6 +21,7 @@ for (const d of [exportsDir, socialDir, publicDir]) mkdirSync(d, { recursive: tr
 const svg = (name) => readFileSync(join(src, name), "utf8");
 const dataUri = (s) => `data:image/svg+xml;base64,${Buffer.from(s).toString("base64")}`;
 const geist = readFileSync(join(root, "assets", "branding", "fonts", "Geist-SemiBold.ttf")).toString("base64");
+const stix = readFileSync(join(root, "assets", "branding", "fonts", "STIXTwoText-Regular.ttf")).toString("base64");
 const geistMono = readFileSync(join(root, "assets", "branding", "fonts", "GeistMono-Regular.ttf")).toString("base64");
 
 const browser = await chromium.launch({ channel: "chrome" });
@@ -78,13 +79,14 @@ copyFileSync(join(src, "logo.svg"), join(publicDir, "logo.svg"));
 // ── Social previews ──────────────────────────────────────────────────
 const card = ({ width, height, scale = 1 }) => `<!doctype html><html><head><style>
 @font-face{font-family:Geist;src:url(data:font/ttf;base64,${geist})}
+@font-face{font-family:STIX;src:url(data:font/ttf;base64,${stix})}
 @font-face{font-family:GeistMono;src:url(data:font/ttf;base64,${geistMono})}
 *{box-sizing:border-box;margin:0}
-body{width:${width}px;height:${height}px;background:#FAFAF7;color:#1D2320;font-family:Geist;position:relative;overflow:hidden}
+body{width:${width}px;height:${height}px;background:#FFFFFF;color:#0F0F0E;font-family:Geist;position:relative;overflow:hidden}
 .grid{position:absolute;inset:0;background-image:linear-gradient(to right,#E4E2DA 1px,transparent 1px),linear-gradient(to bottom,#E4E2DA 1px,transparent 1px);background-size:${48 * scale}px ${48 * scale}px;opacity:.55;mask-image:radial-gradient(ellipse at 75% 40%,#000 0%,transparent 70%)}
 .wrap{position:absolute;inset:${72 * scale}px;display:flex;flex-direction:column;justify-content:space-between}
 .logo img{height:${56 * scale}px}
-h1{font-size:${76 * scale}px;line-height:1.02;letter-spacing:-0.045em;font-weight:600;max-width:${780 * scale}px}
+h1{font-family:STIX;font-size:${74 * scale}px;line-height:1.08;letter-spacing:-0.005em;font-weight:400;max-width:${780 * scale}px}
 h1 span{color:#1F7A66}
 .meta{font-family:GeistMono;font-size:${20 * scale}px;letter-spacing:.08em;text-transform:uppercase;color:#6F7873;display:flex;gap:${28 * scale}px}
 .meta b{color:#2E9E85;font-weight:400}

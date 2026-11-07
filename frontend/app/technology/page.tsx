@@ -46,9 +46,9 @@ export default function TechnologyPage() {
   return (
     <>
       <Navbar />
-      <main id="main" className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
+      <main id="main" className="mx-auto max-w-5xl px-6 pb-8">
         <SectionLabel>Technology</SectionLabel>
-        <h1 className="mt-6 max-w-3xl text-5xl font-semibold tracking-[-0.045em] sm:text-6xl">Built around evidence.</h1>
+        <h1 className="mt-6 max-w-3xl font-serif text-[2.5rem] font-normal leading-[1.2] sm:text-5xl">Built around evidence.</h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-2">
           Each stage below is a separate module with its own tests. Read the{" "}
           <a className="underline decoration-line-strong underline-offset-4 hover:decoration-ink" href={repoFile("ARCHITECTURE.md")} target="_blank" rel="noopener noreferrer">
@@ -62,7 +62,7 @@ export default function TechnologyPage() {
             <li key={s.n} className="grid gap-6 py-12 md:grid-cols-[120px_1fr_1fr]">
               <p className="font-mono text-sm text-mint-ink">{s.n}</p>
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight">{s.title}</h2>
+                <h2 className="font-serif text-2xl font-normal">{s.title}</h2>
                 <p className="mt-3 leading-relaxed text-ink-2">{s.body}</p>
               </div>
               <ul className="space-y-2 self-start rounded-xl border border-line bg-surface p-5 font-mono text-xs text-ink-2">
@@ -78,7 +78,7 @@ export default function TechnologyPage() {
 
         <section className="mt-20" aria-labelledby="limits">
           <SectionLabel>Limits, stated plainly</SectionLabel>
-          <h2 id="limits" className="mt-4 text-3xl font-semibold tracking-tight">What Clai doesn&apos;t do</h2>
+          <h2 id="limits" className="mt-4 font-serif text-3xl font-normal">What Clai doesn&apos;t do</h2>
           <ul className="mt-6 grid gap-3 text-ink-2 md:grid-cols-2">
             {[
               "It is not legal advice and doesn't judge whether terms are fair.",

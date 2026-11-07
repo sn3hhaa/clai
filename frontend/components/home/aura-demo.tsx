@@ -34,7 +34,7 @@ export function AuraDemo() {
 
   return (
     <figure className="relative">
-      <div className="mx-auto max-w-[420px]">
+      <div className="mx-auto max-w-[190px]">
         <Aura state={state} getLevel={getLevel} label={`Demonstration of the Clai Aura: ${state}`} />
       </div>
       <figcaption className="mt-2 flex flex-col items-center gap-2 text-center">

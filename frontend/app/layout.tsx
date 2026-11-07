@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Inter, STIX_Two_Text } from "next/font/google";
 import localFont from "next/font/local";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
+const stix = STIX_Two_Text({ variable: "--font-stix", subsets: ["latin"], display: "swap", weight: ["400", "500"] });
 // Full Geist Mono (OFL) from the repo: the Google Fonts subset lacks the box-drawing glyphs used in ASCII frames.
 const geistMono = localFont({ src: "./fonts/GeistMono-Regular.ttf", variable: "--font-geist-mono", display: "swap" });
 
@@ -27,13 +28,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#fafaf7",
+  themeColor: "#ffffff",
   colorScheme: "light",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${stix.variable} ${geistMono.variable}`}>
       <body className="font-sans text-ink antialiased">
         <a
           href="#main"

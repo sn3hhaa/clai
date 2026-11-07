@@ -34,6 +34,19 @@ export function VoicePanel({ documentId, conversationId, onConversation, onAnswe
   const [error, setError] = React.useState<string | null>(null);
   const finishing = React.useRef(false); // "End call" and onDisconnected can both fire
 
+  // Hanging up while Clai is mid-sentence cuts its transcript stream, and livekit-client rejects
+  // that stream's promise ("Room disconnected in the middle of receiving data"). That's the
+  // expected result of hanging up, not a fault, so it's handled here instead of surfacing as an
+  // uncaught error. Any other rejection is left alone.
+  React.useEffect(() => {
+    const onRejection = (event: PromiseRejectionEvent) => {
+      const reason = event.reason as { name?: string; message?: string } | undefined;
+      if (reason?.name === "DataStreamError" && /disconnected/i.test(reason.message ?? "")) event.preventDefault();
+    };
+    window.addEventListener("unhandledrejection", onRejection);
+    return () => window.removeEventListener("unhandledrejection", onRejection);
+  }, []);
+
   async function start() {
     finishing.current = false;
     setError(null);

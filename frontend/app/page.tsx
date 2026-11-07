@@ -1,14 +1,14 @@
 import { Footer } from "@/components/shared/footer";
 import { Navbar } from "@/components/shared/navbar";
 import {
-  DeveloperSection,
+  Developers,
+  Features,
   FinalCTA,
-  GroundedAnswers,
   Hero,
+  Highlights,
   HowItWorks,
-  TechnologyTeaser,
-  VoiceExperience,
-  WhatClaiDoes,
+  OpenSource,
+  ProductBand,
 } from "@/components/home/sections";
 
 export default function HomePage() {
@@ -17,12 +17,12 @@ export default function HomePage() {
       <Navbar />
       <main id="main">
         <Hero />
-        <WhatClaiDoes />
-        <VoiceExperience />
-        <GroundedAnswers />
+        <ProductBand />
+        <Features />
+        <Highlights />
         <HowItWorks />
-        <TechnologyTeaser />
-        <DeveloperSection />
+        <OpenSource />
+        <Developers />
         <FinalCTA />
       </main>
       <Footer />

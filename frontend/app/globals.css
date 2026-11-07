@@ -2,14 +2,14 @@
 
 /* ── Clai design tokens ─────────────────────────────────────────────── */
 :root {
-  --bg: #fafaf7;
+  --bg: #ffffff;
   --surface: #ffffff;
-  --surface-2: #f3f2ec;
-  --ink: #1d2320;
-  --ink-2: #4a524e;
-  --ink-3: #6f7873;
-  --line: #e4e2da;
-  --line-strong: #cfccc1;
+  --surface-2: #f5f4f1; /* warm card grey */
+  --ink: #0f0f0e;
+  --ink-2: #626260;
+  --ink-3: #8b8b88;
+  --line: #e7e6e2;
+  --line-strong: #d6d5d0;
   --mint: #2e9e85; /* graphics & marks only */
   --mint-ink: #1f7a66; /* text on light backgrounds (AA) */
   --mint-soft: #ddf3ec;
@@ -37,7 +37,8 @@
   --color-amber-soft: var(--amber-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-stix), ui-serif, Georgia, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
   --tracking-tightest: -0.045em;
 }

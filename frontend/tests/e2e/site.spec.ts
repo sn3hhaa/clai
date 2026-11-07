@@ -67,15 +67,19 @@ test("homepage presents the product and its sections", async ({ page }) => {
   await expect(page).toHaveTitle(/Clai — Talk to your agreements/);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Talk to your agreements.");
   for (const heading of [
-    "An agreement you can actually talk to.",
     "Don't search the agreement. Talk to it.",
     "Answers with a trail back to the agreement.",
-    "Built around evidence.",
+    "How it works",
+    "Free and open source",
+    "Built for engineers who care where answers come from.",
+    "Your agreement has answers. Talk to it.",
   ]) {
     await expect(page.getByRole("heading", { name: heading })).toBeVisible();
   }
   await expect(page.getByText("Demonstration · simulated audio")).toBeVisible();
   await expect(page.getByText("Fictional example")).toBeVisible();
+  await expect(page.getByRole("img", { name: /The Clai workspace/ })).toBeVisible();
+  await expect(page.getByText(/George Inness/)).toBeVisible();
   await expect(page.locator('link[rel="icon"]').first()).toHaveAttribute("href", /icon|favicon/);
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /opengraph-image/);
 });
