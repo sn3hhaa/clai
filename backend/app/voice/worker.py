@@ -95,7 +95,10 @@ async def entrypoint(ctx: JobContext) -> None:
         turn_handling={
             "turn_detection": inference.TurnDetector(version="v1-mini"),
             # VAD-based barge-in runs locally; "adaptive" needs LiveKit Cloud inference.
-            "interruption": {"enabled": True, "mode": "vad"},
+            # Non-streaming STT only produces a transcript after the utterance ends, so a real
+            # 2-3 s question would exceed the false-interruption timeout and be discarded while the
+            # agent resumes. Treat every interruption as real instead.
+            "interruption": {"enabled": True, "mode": "vad", "resume_false_interruption": False},
         },
     )
 

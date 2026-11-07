@@ -15,7 +15,9 @@ const normalise = (s: string) => s.toLowerCase().replace(/[‘’']/g, "'").repl
 /**
  * Wrap text-layer items that belong to the highlighted passage in an evidence mark.
  * pdf.js splits text into line fragments that may also contain neighbouring text (e.g. a clause
- * number), so an item matches when it is contained in the passage or shares a 3-word run with it.
+ * number), so an item matches when it is contained in the passage, or when at least 60% of its
+ * words fall inside 3-word runs that also occur in the passage. The coverage threshold stops
+ * neighbouring clauses with shared boilerplate ("either party may terminate…") from lighting up.
  */
 export function highlightItem(item: string, passage: string | null): string {
   const escaped = item.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string);
@@ -26,7 +28,11 @@ export function highlightItem(item: string, passage: string | null): string {
   let match = haystack.includes(needle);
   if (!match) {
     const words = needle.split(" ");
-    for (let i = 0; i + 3 <= words.length && !match; i++) match = haystack.includes(words.slice(i, i + 3).join(" "));
+    const covered = new Array<boolean>(words.length).fill(false);
+    for (let i = 0; i + 3 <= words.length; i++) {
+      if (haystack.includes(words.slice(i, i + 3).join(" "))) covered.fill(true, i, i + 3);
+    }
+    match = words.length >= 3 && covered.filter(Boolean).length / words.length >= 0.6;
   }
   return match ? `<mark class="evidence-mark">${escaped}</mark>` : escaped;
 }

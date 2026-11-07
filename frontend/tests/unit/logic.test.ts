@@ -31,7 +31,14 @@ describe("highlightItem", () => {
 
   it("marks fragments of the passage, including lines that start with a clause label", () => {
     expect(highlightItem("notice.", passage)).toContain("evidence-mark");
-    expect(highlightItem("8.1 Termination for convenience. Either party may terminate this", passage)).toContain("evidence-mark");
+    // The line exactly as pdf.js renders it for the fixture (10 of 13 words covered).
+    const line = "8.1 Termination for convenience. Either party may terminate this agreement with 30 days' written";
+    expect(highlightItem(line, passage)).toContain("evidence-mark");
+  });
+
+  it("does not light up a neighbouring clause that shares boilerplate", () => {
+    const neighbour = "8.2 Termination for cause. Either party may terminate this Agreement immediately by written";
+    expect(highlightItem(neighbour, passage)).not.toContain("mark");
   });
 
   it("leaves unrelated text and short fragments alone, and escapes HTML", () => {

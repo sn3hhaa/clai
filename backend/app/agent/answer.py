@@ -104,10 +104,6 @@ def generate_extractive(question: str, evidence: list[Candidate]) -> Draft:
     answer = f"{where}{page} says: “{quote}”"
     lead = f"According to clause {top.chunk.clause}, " if top.chunk.clause else "The agreement says "
     spoken = lead + quote[0].lower() + quote[1:] if top.chunk.clause else lead + quote
-    key_points = [quote] + [
-        f"{('Clause ' + c.chunk.clause) if c.chunk.clause else 'Page ' + str(c.chunk.page_number)}: "
-        f"{split_sentences(c.chunk.text)[0] if split_sentences(c.chunk.text) else c.chunk.text}"
-        for c in evidence[1:3]
-        if c.score >= 0.5
-    ]
+    # Only the quoted, cited text: neighbouring passages were not asked about.
+    key_points = [quote]
     return Draft(answer, spoken, key_points[:3], [top.chunk.chunk_id], True, "extractive")
