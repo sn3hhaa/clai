@@ -13,7 +13,7 @@ import numpy as np
 from livekit import rtc
 from livekit.agents import llm
 
-from app.voice.bridge import ERROR_REPLY, ClaiApiClient, ClaiBackendLLM, last_user_text
+from app.voice.bridge import ERROR_REPLY, ClaiApiClient, ClaiBackendLLM, is_fragment, last_user_text
 from app.voice.local_stt import WHISPER_RATE, to_whisper_input
 from app.voice.local_tts import split_phrases, wav_to_pcm
 
@@ -100,7 +100,21 @@ def test_bridge_speaks_spoken_answer_and_publishes_evidence() -> None:
     assert published[0]["evidence"][0]["clause"] == "8.1"
 
 
+def test_bridge_asks_to_repeat_fragments_without_querying() -> None:
+    calls: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(request)
+        return httpx.Response(200, json={"spoken_answer": "should not be used"})
+
+    bridge, published = _bridge(handler)
+    reply = asyncio.run(_collect(bridge, "Period."))
+    assert reply == "Sorry, I only caught “Period”. Could you ask the whole question again?"
+    assert calls == [] and published == []
+    assert not is_fragment("Termination notice?")
+
+
 def test_bridge_degrades_gracefully_when_api_is_down() -> None:
     bridge, published = _bridge(lambda _req: httpx.Response(503))
-    assert asyncio.run(_collect(bridge, "Anything?")) == ERROR_REPLY
+    assert asyncio.run(_collect(bridge, "Anything about termination?")) == ERROR_REPLY
     assert published[0]["error"] == "backend_unavailable"

@@ -82,9 +82,17 @@ class Settings(BaseSettings):
     # The voice worker calls the API at this address.
     api_internal_url: str = "http://127.0.0.1:8000"
 
-    @field_validator("data_dir", mode="after")
+    @field_validator("qdrant_path", mode="before")
     @classmethod
-    def _absolute(cls, value: Path) -> Path:
+    def _blank_is_unset(cls, value: object) -> object:
+        # `QDRANT_PATH=` in .env would otherwise become Path("."), the current directory.
+        return None if isinstance(value, str) and not value.strip() else value
+
+    @field_validator("data_dir", "qdrant_path", mode="after")
+    @classmethod
+    def _absolute(cls, value: Path | None) -> Path | None:
+        if value is None:
+            return None
         return value if value.is_absolute() else (BACKEND_ROOT / value).resolve()
 
     @property

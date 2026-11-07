@@ -1,6 +1,6 @@
 """Clai voice agent worker (LiveKit Agents).
 
-    python -m app.voice.worker download-files   # VAD + turn-detector weights (once)
+    python -m livekit.agents download-files     # VAD + turn-detector weights (once)
     python -m app.voice.worker dev              # connect to LIVEKIT_URL and wait for dispatches
 
 The browser's token (POST /voice/token) dispatches this agent by name into a fresh room with

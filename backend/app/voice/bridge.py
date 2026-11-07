@@ -55,6 +55,16 @@ class ClaiApiClient:
         await self._client.aclose()
 
 
+def is_fragment(text: str) -> bool:
+    """A one-word transcript is too little to answer from; ask the caller to repeat."""
+    return len([w for w in text.split() if any(c.isalnum() for c in w)]) < 2
+
+
+def clarify(text: str) -> str:
+    heard = text.strip().rstrip(".?!")
+    return f"Sorry, I only caught “{heard}”. Could you ask the whole question again?"
+
+
 def last_user_text(chat_ctx: llm.ChatContext) -> str:
     for item in reversed(chat_ctx.items):
         if isinstance(item, llm.ChatMessage) and item.role == "user":
@@ -110,6 +120,13 @@ class _ClaiStream(llm.LLMStream):
         question = last_user_text(self._chat_ctx)
         request_id = utils.shortuuid()
         if not question:
+            return
+        if is_fragment(question):
+            # Speech recognition sometimes catches only the tail of a question ("Period.").
+            # Answering it would mean confidently answering a question nobody asked.
+            self._event_ch.send_nowait(
+                llm.ChatChunk(id=request_id, delta=llm.ChoiceDelta(role="assistant", content=clarify(question)))
+            )
             return
         try:
             answer = await self._owner.api.ask(self._owner.document_id, self._owner.conversation_id, question)
