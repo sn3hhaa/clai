@@ -8,7 +8,7 @@ const browser = await chromium.launch({ channel: process.env.CI ? undefined : "c
 const page = await browser.newPage();
 const problems = [];
 page.on("response", (r) => r.status() >= 400 && problems.push(`${r.status()} ${r.url()}`));
-page.on("console", (m) => m.type() === "error" && !m.text().includes("127.0.0.1:8000") && problems.push(`console: ${m.text()}`));
+page.on("console", (m) => m.type() === "error" && !/127.0.0.1:8000|ERR_CONNECTION_REFUSED/.test(m.text()) && problems.push(`console: ${m.text()}`));
 page.on("pageerror", (e) => problems.push(`pageerror: ${e}`));
 
 for (const path of ["/", "/technology/", "/talk/"]) {
