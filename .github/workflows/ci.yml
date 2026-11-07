@@ -29,7 +29,7 @@ jobs:
           uv venv .venv --python 3.12
           uv pip sync requirements-ci.txt --python .venv/bin/python --torch-backend cpu
       - name: Cache Hugging Face models
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/huggingface
           key: hf-minilm-msmarco-v1
