@@ -1,0 +1,31 @@
+name: Bug report
+description: Something in Clai doesn't work as documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Please don't attach real agreements. Reproduce with a fictional PDF or the fixtures in backend/tests/fixtures."
+  - type: textarea
+    id: what
+    attributes: { label: What happened?, description: Include the question you asked and the answer or error you got. }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: What did you expect? }
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes: { label: Steps to reproduce }
+    validations: { required: true }
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Ingestion, Retrieval / answers, Voice, Workspace UI, Website, Setup / scripts, Docs]
+    validations: { required: true }
+  - type: input
+    id: env
+    attributes: { label: Environment, placeholder: "Windows 11, Python 3.12, Chrome 140, GPU: none" }
+  - type: textarea
+    id: logs
+    attributes: { label: Relevant logs, description: From logs/ or the terminal. Remove any document text., render: text }

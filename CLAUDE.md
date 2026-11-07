@@ -19,7 +19,7 @@ section and clause citations. Read [PRD.md](PRD.md) for the product and
 |---|---|
 | `backend/app/` | FastAPI app, ingestion, retrieval, LangGraph agent, LLM, voice worker |
 | `backend/tests/` | pytest; `fixtures/` holds fictional agreement PDFs |
-| `frontend/` | Next.js App Router (TypeScript, Tailwind, shadcn/ui, GSAP) |
+| `frontend/` | Next.js App Router (TypeScript, Tailwind CSS 4, GSAP, pdf.js, LiveKit) |
 | `docs/` | MkDocs site: guides, architecture, ADRs (`docs/decisions/`) |
 | `scripts/` | `setup`, `dev`, `check` for PowerShell and bash |
 | `assets/branding/` | Source logo SVGs and brand guidelines |
@@ -77,10 +77,12 @@ Frontend only: `cd frontend; npm run dev | npm test | npm run build`.
 
 ## Design principles (frontend)
 
-Warm white (`#FAFAF7`), charcoal text, fine gray borders, restrained mint/teal accent.
-Editorial typography, generous whitespace, monospace for labels, references and
-status. GSAP used sparingly; respect `prefers-reduced-motion`. No neon, generic
-gradients, glassmorphism, robots, or fake stats.
+The website deliberately follows **sort.to's** look (the owner's explicit reference):
+white page, centred 1024 px column, STIX Two Text serif headings (40/48), Inter body,
+19 px grey lead, black pill buttons, 3×2 icon features, warm-grey cards (`#F5F4F1`),
+and full-bleed painted bands (Inness, public domain). Use original assets only. Mint is a
+small accent. The workspace keeps Geist Mono for clause/page references. GSAP is used
+sparingly and respects `prefers-reduced-motion`. Brand rules: `assets/branding/README.md`.
 
 ## Voice-agent constraints
 

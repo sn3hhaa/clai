@@ -3,7 +3,8 @@
 import * as React from "react";
 import { FileUp, Loader2 } from "lucide-react";
 import { SectionLabel } from "@/components/shared/ascii";
-import { api, ApiError } from "@/lib/api/client";
+import { API_BASE_URL, api, ApiError } from "@/lib/api/client";
+import { repoFile } from "@/lib/site";
 import type { DocumentOut } from "@/lib/api/types";
 import { asset, cn, formatBytes } from "@/lib/utils";
 
@@ -25,6 +26,19 @@ export function Uploader({ onReady }: { onReady: (doc: DocumentOut) => void }) {
   const [dragging, setDragging] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const busy = stage.kind !== "idle";
+  // The public site is static; the app needs a Clai backend running locally. Say so up front.
+  const [backend, setBackend] = React.useState<"checking" | "online" | "offline">("checking");
+
+  React.useEffect(() => {
+    let active = true;
+    api
+      .health()
+      .then(() => active && setBackend("online"))
+      .catch(() => active && setBackend("offline"));
+    return () => {
+      active = false;
+    };
+  }, []);
 
   async function upload(file: File) {
     const problem = validatePdf(file);
@@ -63,6 +77,21 @@ export function Uploader({ onReady }: { onReady: (doc: DocumentOut) => void }) {
       <p className="mt-4 max-w-md text-ink-2">
         Upload a text-based PDF up to 20 MB. It&apos;s processed by your Clai backend and stays there until you delete it.
       </p>
+
+      {backend === "offline" && (
+        <div role="status" className="mt-8 w-full rounded-2xl border border-line bg-surface-2 p-5 text-left text-sm leading-relaxed text-ink-2">
+          <p className="font-medium text-ink">Clai&apos;s backend isn&apos;t running</p>
+          <p className="mt-1">
+            This page talks to a Clai backend on your own computer, which keeps your agreements private. It isn&apos;t
+            reachable at <code className="font-mono text-xs">{API_BASE_URL}</code>. Set it up in a few minutes with
+            the{" "}
+            <a className="text-ink underline underline-offset-4" href={repoFile("docs/installation.md")} target="_blank" rel="noopener noreferrer">
+              installation guide
+            </a>
+            , then open <code className="font-mono text-xs">http://localhost:3000/talk</code>.
+          </p>
+        </div>
+      )}
 
       <div
         role="button"

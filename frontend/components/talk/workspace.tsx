@@ -15,7 +15,14 @@ import { SessionSummary } from "./session-summary";
 import { VoicePanel } from "./voice-panel";
 
 // pdf.js needs the browser (canvas, workers).
-const PdfViewer = dynamic(() => import("@/components/documents/pdf-viewer").then((m) => m.PdfViewer), { ssr: false });
+const PdfViewer = dynamic(() => import("@/components/documents/pdf-viewer").then((m) => m.PdfViewer), {
+  ssr: false,
+  loading: () => (
+    <p role="status" className="grid h-full place-items-center text-sm text-ink-3">
+      Loading the document viewer…
+    </p>
+  ),
+});
 
 type Tab = "agreement" | "voice" | "evidence";
 

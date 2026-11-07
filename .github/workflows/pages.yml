@@ -1,0 +1,55 @@
+# Publishes the website (static Next.js export) and the docs (MkDocs) to GitHub Pages:
+#   https://sn3hhaa.github.io/clai/        website
+#   https://sn3hhaa.github.io/clai/docs/   documentation
+# The backend, voice worker and vector store can't run on Pages; /talk explains how to run them locally.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build the website
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run export:pages
+        env:
+          STATIC_EXPORT: "true"
+          NEXT_PUBLIC_BASE_PATH: /clai
+          NEXT_PUBLIC_API_BASE_URL: ${{ vars.CLAI_API_URL }}
+      - uses: astral-sh/setup-uv@v5
+      - name: Build the docs into /docs
+        run: uvx --python 3.12 --with-requirements docs/requirements.txt mkdocs build --strict --site-dir frontend/out/docs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

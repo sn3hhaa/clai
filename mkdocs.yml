@@ -1,0 +1,69 @@
+site_name: Clai documentation
+site_description: Voice-first agreement intelligence — architecture, setup and APIs.
+site_url: https://sn3hhaa.github.io/clai/docs/
+repo_url: https://github.com/sn3hhaa/clai
+repo_name: sn3hhaa/clai
+edit_uri: edit/main/docs/
+copyright: Clai is MIT licensed. Not legal advice.
+
+theme:
+  name: material
+  logo: assets/mark.svg
+  favicon: assets/mark.svg
+  font: false
+  palette:
+    - scheme: default
+      primary: white
+      accent: teal
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Overview: index.md
+  - Getting started:
+      - Installation: installation.md
+      - Configuration: configuration.md
+      - Development workflow: guides/development.md
+      - Troubleshooting: guides/troubleshooting.md
+  - Architecture:
+      - System: architecture/overview.md
+      - PDF ingestion: architecture/ingestion.md
+      - Hybrid retrieval: architecture/retrieval.md
+      - LangGraph agent: architecture/agent.md
+      - Voice pipeline: architecture/voice.md
+  - API reference: api/reference.md
+  - Quality:
+      - Testing: guides/testing.md
+      - Evaluation: evaluation.md
+      - Acceptance test (voice): guides/acceptance-test.md
+  - Operations:
+      - Security & privacy: security.md
+      - Deployment: deployment.md
+  - Decisions:
+      - 0001 Qdrant without Docker: decisions/0001-qdrant-without-docker.md
+      - 0002 Hybrid retrieval: decisions/0002-hybrid-retrieval.md
+      - 0003 LangGraph agent: decisions/0003-langgraph.md
+      - 0004 LiveKit for voice: decisions/0004-livekit.md
+      - 0005 Speech providers: decisions/0005-speech-providers.md
+      - 0006 Zero-budget deployment: decisions/0006-zero-budget-deployment.md
+  - Limitations & roadmap: roadmap.md

@@ -33,6 +33,7 @@ const evidence = {
 
 /** Fictional API responses so the UI flow is tested without a backend in CI. */
 async function mockApi(page: Page) {
+  await page.route(`${API}/health`, (route) => route.fulfill({ json: { status: "ok" } }));
   await page.route(`${API}/documents`, (route) => route.fulfill({ status: 201, json: doc }));
   await page.route(`${API}/documents/${doc.id}/file`, (route) =>
     route.fulfill({ status: 200, body: SAMPLE, contentType: "application/pdf" }),
@@ -92,6 +93,20 @@ test("navigation reaches technology and talk", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Built around evidence." })).toBeVisible();
 });
 
+test("explains when no backend is reachable (the hosted site)", async ({ page }) => {
+  await page.route(`${API}/health`, (route) => route.abort());
+  await page.goto("/talk");
+  await expect(page.getByRole("status").filter({ hasText: "backend isn't running" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "installation guide" })).toHaveAttribute("href", /docs\/installation\.md$/);
+});
+
+test("no backend warning when the backend responds", async ({ page }) => {
+  await mockApi(page);
+  await page.goto("/talk");
+  await expect(page.getByRole("heading", { name: "What are we reading today?" })).toBeVisible();
+  await expect(page.getByText("backend isn't running")).toHaveCount(0);
+});
+
 test("upload rejects non-PDF files before contacting the backend", async ({ page }) => {
   await page.goto("/talk");
   await page.locator('input[type="file"]').setInputFiles({ name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("hi") });
@@ -112,6 +127,7 @@ test("upload → ask → evidence → document navigation", async ({ page, isMob
   if (isMobile) await page.getByRole("tab", { name: "Evidence" }).click();
   await expect(page.getByText("grounded", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Show Clause 8.1 · p. 2 in the document" }).click();
-  await expect(page.getByText("page 2 / 2")).toBeVisible();
+  // pdf.js is lazy-loaded; a cold dev-server module load can take several seconds.
+  await expect(page.getByText("page 2 / 2")).toBeVisible({ timeout: 20_000 });
   await expect(page.locator("mark.evidence-mark").first()).toBeVisible({ timeout: 15_000 });
 });
