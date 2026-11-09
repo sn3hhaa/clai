@@ -22,7 +22,7 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v7
       - run: uv python install 3.12
       - name: Install pinned dependencies (CPU-only PyTorch)
         run: |
@@ -87,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v7
       - run: uvx --python 3.12 --with-requirements docs/requirements.txt mkdocs build --strict
 
   security:
@@ -101,6 +101,6 @@ jobs:
       - name: npm audit (production dependencies, high and above)
         working-directory: frontend
         run: npm audit --omit=dev --audit-level=high
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v7
       - name: pip-audit (runtime requirements)
         run: uvx pip-audit --requirement backend/requirements.txt --disable-pip --no-deps --progress-spinner off
