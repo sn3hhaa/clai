@@ -37,7 +37,7 @@ jobs:
           STATIC_EXPORT: "true"
           NEXT_PUBLIC_BASE_PATH: /clai
           NEXT_PUBLIC_API_BASE_URL: ${{ vars.CLAI_API_URL }}
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v7
       - name: Build the developer docs into /reference
         run: uvx --python 3.12 --with-requirements docs/requirements.txt mkdocs build --strict --site-dir frontend/out/reference
       - uses: actions/upload-pages-artifact@v3
