@@ -1,246 +1,317 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  AudioLines,
-  FileSearch,
-  HardDrive,
-  Layers,
-  MessagesSquare,
-  Quote,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/shared/reveal";
-import { GitHubIcon } from "@/components/shared/social-icons";
-import { site } from "@/lib/site";
-import { Painting } from "@/components/shared/painting";
-import { asset } from "@/lib/utils";
 import { AuraDemo } from "./aura-demo";
+import { EvidenceLink } from "./evidence-link";
+import { ProductFilm } from "./product-film";
 
-const column = "mx-auto w-full max-w-5xl px-6";
-const serif = "font-serif text-[2.5rem] font-normal leading-[1.2] tracking-[-0.0025em] text-ink";
-const lead = "text-[1.1875rem] leading-[1.5] text-ink-2";
+const wrap = "mx-auto max-w-[1200px] px-5 md:px-8";
 
-export function PillLink({ href, children, external = false }: { href: string; children: React.ReactNode; external?: boolean }) {
-  const cls =
-    "group inline-flex items-center gap-1.5 rounded-full bg-ink px-6 py-3 text-[0.95rem] font-medium text-white transition-colors hover:bg-ink/85";
-  const body = (
-    <>
+export function PrimaryCta({ children = "Open Clai" }: { children?: React.ReactNode }) {
+  return (
+    <Link href="/talk" className="group inline-flex items-center gap-2 bg-ink px-6 py-3.5 font-medium text-bg transition-colors hover:bg-mint-hover">
       {children}
-      <ArrowRight aria-hidden className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-    </>
-  );
-  return external ? (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
-      {body}
-    </a>
-  ) : (
-    <Link href={href} className={cls}>
-      {body}
+      <ArrowUpRight aria-hidden className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
     </Link>
   );
 }
 
+function Marker({ n, children }: { n: string; children: React.ReactNode }) {
+  return (
+    <p className="eyebrow flex items-baseline gap-3">
+      <span className="text-mint">§ {n}</span>
+      <span>{children}</span>
+    </p>
+  );
+}
+
+/* ── A. Hero ───────────────────────────────────────────────────────── */
 export function Hero() {
   return (
-    <section className="px-6 text-center">
-      <p className="text-ink-2">Agreement intelligence, through conversation</p>
-      <h1 className={`${serif} mx-auto mt-4 max-w-[34rem]`}>Talk to your agreements. Understand what matters.</h1>
-      <p className={`${lead} mx-auto mt-6 max-w-[38rem] text-balance`}>
-        Upload a document, ask questions naturally, and get answers grounded in the agreement itself—with the
-        evidence to trace them back.
-      </p>
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-        <PillLink href="/talk">Talk to Clai</PillLink>
-        <Link href="/#how-it-works" className="text-[0.95rem] text-ink-2 underline-offset-4 hover:text-ink hover:underline">
-          See how it works
-        </Link>
-      </div>
+    <section className={`${wrap} pb-20 pt-16 md:pb-28 md:pt-24`}>
+      <Reveal className="grid gap-14 md:grid-cols-12 md:gap-8" stagger={0.09}>
+        <div className="md:col-span-7">
+          <h1 data-reveal className="display text-[clamp(3.2rem,8.4vw,7.4rem)]">
+            Your agreement, <em>explained.</em>
+          </h1>
+          <p data-reveal className="mt-8 max-w-[34ch] text-[1.2rem] leading-relaxed text-ink-2">
+            Ask about the details that matter in plain language, and see every answer traced back to the clause it came from.
+          </p>
+          <div data-reveal className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-4">
+            <PrimaryCta />
+            <a href="#walkthrough" className="group inline-flex items-center gap-2 text-ink-2 transition-colors hover:text-ink">
+              Watch the walkthrough
+              <ArrowRight aria-hidden className="h-4 w-4 rotate-90 transition-transform group-hover:translate-y-0.5" />
+            </a>
+          </div>
+        </div>
+
+        {/* A page fragment with a margin annotation: the product's idea in one image. */}
+        <aside data-reveal aria-label="Example: an answer traced to its clause" className="relative md:col-span-5 md:pt-6">
+          <div className="border border-line bg-surface p-6 font-mono text-[0.78rem] leading-[1.9] text-ink-3">
+            <p className="mb-3 text-ink-2">8. Termination</p>
+            <p>
+              8.1 Termination for convenience. Either party may terminate this agreement with{" "}
+              <span className="evidence-highlight">30 days&apos; written notice.</span>
+            </p>
+            <p className="mt-3">8.2 Termination for cause. Either party may terminate this Agreement immediately by written notice if the other party commits a material breach…</p>
+          </div>
+          <div className="relative ml-6 border-l border-mint-deep pl-5 pt-5">
+            <span aria-hidden className="absolute -left-[3px] top-0 h-1.5 w-1.5 bg-mint" />
+            <p className="eyebrow">You asked</p>
+            <p className="mt-1.5 text-ink">How much notice do I need to give?</p>
+            <p className="eyebrow mt-4">Clai · clause 8.1 · page 2</p>
+            <p className="display mt-1.5 text-[1.45rem] leading-snug">Thirty days, in writing.</p>
+          </div>
+          <p className="mt-4 text-right text-[0.75rem] text-ink-3">Fictional agreement</p>
+        </aside>
+      </Reveal>
     </section>
   );
 }
 
-/** Full-bleed painted band with the real product floating on it. */
-export function ProductBand() {
+/* ── C. Product film ───────────────────────────────────────────────── */
+export function Film() {
   return (
-    <section aria-label="Clai workspace" className="relative isolate mt-24 w-full">
-      <Painting position="center 22%" />
-      <div className="mx-auto max-w-5xl px-6 pb-14 pt-16 sm:pb-24 sm:pt-32">
-        <figure className="overflow-hidden rounded-2xl border border-black/20 bg-white shadow-[0_30px_80px_-20px_rgba(20,30,15,0.55)]">
-          <div className="flex items-center gap-1.5 border-b border-line bg-surface-2 px-4 py-2.5" aria-hidden>
-            <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
-            <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
-            <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
-          </div>
-          <picture>
-            <source srcSet={asset("/art/product-talk.webp")} type="image/webp" />
-            <img
-              src={asset("/art/product-talk.png")}
-              width={1440}
-              height={900}
-              alt="The Clai workspace: the agreement PDF with clause 8.1 highlighted, the voice panel with the transcript, and the evidence panel citing clause 8.1 on page 2."
-              className="block h-auto w-full"
-            />
-          </picture>
+    <section className={`${wrap}`} aria-label="Product walkthrough">
+      <ProductFilm />
+    </section>
+  );
+}
+
+/* ── D. The problem ────────────────────────────────────────────────── */
+const DENSE = `10.4 Notwithstanding anything to the contrary herein, and subject always to the provisions of Clauses 7.2 and 9.1, neither Party shall be liable to the other Party for any indirect, special or consequential losses howsoever arising, including without limitation loss of profit, revenue, goodwill or anticipated savings, whether in contract, tort (including negligence), breach of statutory duty or otherwise, save that `;
+const DENSE_AFTER = ` and provided further that any claim shall be notified in writing within the period specified in Schedule C, failing which such claim shall be deemed waived to the fullest extent permitted by applicable law.`;
+
+export function Problem() {
+  return (
+    <section className={`${wrap} mt-32 md:mt-44`}>
+      <Reveal className="grid gap-12 md:grid-cols-12 md:gap-8">
+        <div className="md:col-span-5">
+          <span data-reveal>
+            <Marker n="01">The problem</Marker>
+          </span>
+          <h2 data-reveal className="display mt-6 text-[clamp(2.3rem,4.6vw,3.6rem)]">
+            Agreements are written to be precise. <em>Not to be read.</em>
+          </h2>
+          <p data-reveal className="mt-6 max-w-[40ch] text-[1.05rem] leading-relaxed text-ink-2">
+            The sentence that decides your notice period, your liability or your renewal is usually buried in a clause like
+            the one beside this text. Clai finds it, quotes it, and shows you where it is.
+          </p>
+        </div>
+        <figure data-reveal className="md:col-span-6 md:col-start-7">
+          <blockquote className="border-l border-line pl-6 text-[1.02rem] leading-[1.85] text-ink-3">
+            {DENSE}
+            <span className="evidence-highlight">each Party&apos;s total liability is capped at the fees paid in the preceding twelve months</span>
+            {DENSE_AFTER}
+          </blockquote>
+          <figcaption className="mt-4 pl-6 text-[0.78rem] text-ink-3">A fictional clause. The highlighted part is what most people actually need.</figcaption>
         </figure>
+      </Reveal>
+    </section>
+  );
+}
+
+/* ── E. Conversation ───────────────────────────────────────────────── */
+export function Conversation() {
+  return (
+    <section className="mt-32 border-y border-line bg-bg-2 py-24 md:mt-44 md:py-32">
+      <div className={wrap}>
+        <Reveal className="mb-14 max-w-2xl">
+          <span data-reveal>
+            <Marker n="02">The conversation</Marker>
+          </span>
+          <h2 data-reveal className="display mt-6 text-[clamp(2.3rem,4.6vw,3.6rem)]">
+            Less searching. <em>More understanding.</em>
+          </h2>
+          <p data-reveal className="mt-6 text-[1.05rem] leading-relaxed text-ink-2">
+            Ask the way you&apos;d ask a person. Follow-up questions keep their context, so “and if they break it?”
+            just works. Speak or type, whichever suits you.
+          </p>
+        </Reveal>
+        <AuraDemo />
       </div>
     </section>
   );
 }
 
-const features = [
-  { icon: AudioLines, title: "Voice first", body: "Ask out loud and hear a short answer. Interrupt any time; follow-ups keep their context." },
-  { icon: Quote, title: "Every answer cited", body: "Answers point to the page, section and clause they came from, and you can open them in the PDF." },
-  { icon: FileSearch, title: "Reads the whole agreement", body: "Meaning-based and exact-wording search run together, then a reranker picks the best passages." },
-  { icon: MessagesSquare, title: "Says when it doesn't know", body: "If the agreement doesn't answer your question, Clai tells you instead of guessing." },
-  { icon: HardDrive, title: "Runs on your machine", body: "Your documents stay with your Clai backend. Speech can be recognised and spoken entirely locally." },
-  { icon: Layers, title: "Open and inspectable", body: "MIT-licensed, documented and tested. Every step from PDF to answer is a module you can read." },
-];
-
-export function Features() {
+/* ── F. Evidence ───────────────────────────────────────────────────── */
+export function Evidence() {
   return (
-    <section id="features" className={`${column} mt-32 scroll-mt-24`} aria-label="Features">
-      <Reveal className="grid gap-x-10 gap-y-14 text-center sm:grid-cols-2 lg:grid-cols-3" stagger={0.06}>
-        {features.map(({ icon: Icon, title, body }) => (
-          <div key={title} data-reveal>
-            <Icon aria-hidden strokeWidth={1.5} className="mx-auto h-8 w-8 text-ink" />
-            <h3 className="mt-4 font-medium tracking-[-0.02em]">{title}</h3>
-            <p className="mx-auto mt-2 max-w-[18rem] leading-[1.6] text-ink-2">{body}</p>
+    <section className={`${wrap} mt-32 md:mt-44`}>
+      <Reveal className="max-w-2xl">
+        <span data-reveal>
+          <Marker n="03">The evidence</Marker>
+        </span>
+        <h2 data-reveal className="display mt-6 text-[clamp(2.3rem,4.6vw,3.6rem)]">
+          Every answer points back to <em>the clause.</em>
+        </h2>
+      </Reveal>
+      <EvidenceLink>
+        <div className="mt-14 grid items-start gap-6 md:grid-cols-12 md:gap-0">
+          <div className="space-y-5 md:col-span-5">
+            <div data-q className="border border-line p-5">
+              <p className="eyebrow">Question</p>
+              <p className="mt-2 text-[1.1rem] text-ink">What happens if I terminate early?</p>
+            </div>
+            <div data-a className="border border-mint-deep bg-surface p-5">
+              <p className="eyebrow text-mint">Answer · grounded</p>
+              <p className="mt-2 text-[1.05rem] leading-relaxed text-ink">
+                You pay for the work done up to the termination date, and both sides return each other&apos;s confidential
+                information.
+              </p>
+              <p className="mt-4 font-mono text-[0.75rem] text-ink-3">↳ Clause 8.3 · page 2</p>
+            </div>
           </div>
-        ))}
-      </Reveal>
-    </section>
-  );
-}
-
-function Card({ children, title, body }: { children: React.ReactNode; title: string; body: string }) {
-  return (
-    <div data-reveal className="flex flex-col items-center rounded-2xl border border-line bg-surface-2 px-8 pb-10 pt-8 text-center">
-      <div className="flex min-h-[176px] w-full items-center justify-center">{children}</div>
-      <h3 className="mt-4 font-medium tracking-[-0.02em]">{title}</h3>
-      <p className="mx-auto mt-2 max-w-[24rem] leading-[1.6] text-ink-2">{body}</p>
-    </div>
-  );
-}
-
-export function Highlights() {
-  return (
-    <section className={`${column} mt-32`} aria-label="Voice and evidence">
-      <Reveal className="grid gap-4 md:grid-cols-2">
-        <Card
-          title="Don't search the agreement. Talk to it."
-          body="The Aura follows the conversation as Clai listens, thinks and speaks. In a call it moves with the real audio."
-        >
-          <AuraDemo />
-        </Card>
-        <Card
-          title="Answers with a trail back to the agreement."
-          body="Each answer comes with the passages it used. Citations are checked against what was actually retrieved."
-        >
-          <figure className="w-full max-w-[19rem] rounded-xl border border-line bg-white p-4 text-left shadow-[0_8px_24px_-12px_rgba(0,0,0,0.18)]">
-            <figcaption className="flex items-center justify-between text-[11px] text-ink-3">
-              <span>Evidence</span>
-              <span className="rounded-full bg-amber-soft px-2 py-0.5 text-amber-ink">Fictional example</span>
-            </figcaption>
-            <p className="mt-3 text-[13px] leading-snug text-ink">
-              Either party may end the agreement with <span className="rounded bg-mint-soft px-1">30 days&apos; written notice</span>.
+          <svg aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className="hidden h-[260px] w-full md:col-span-2 md:block">
+            <path data-link-path d="M0 72 C 45 72, 55 40, 100 40" fill="none" stroke="var(--mint-deep)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+          </svg>
+          <figure className="border border-line bg-[#f2f1ec] p-6 text-[#1b1f1d] md:col-span-5">
+            <p className="font-mono text-[0.7rem] uppercase tracking-wider text-[#5c625e]">Page 2 · Services Agreement (fictional)</p>
+            <p className="mt-4 text-[0.92rem] font-medium">8. Termination</p>
+            <p className="mt-2 text-[0.88rem] leading-relaxed text-[#4a504c]">8.2 Either party may terminate immediately by written notice if the other commits a material breach…</p>
+            <p className="mt-3 text-[0.88rem] leading-relaxed">
+              8.3{" "}
+              <span data-hl className="bg-[length:100%_100%] bg-no-repeat px-0.5" style={{ backgroundImage: "linear-gradient(var(--mint), var(--mint))" }}>
+                On termination, the Client shall pay for all Services performed up to the termination date, and each party
+                shall return the other party&apos;s Confidential Information.
+              </span>
             </p>
-            <p className="mt-3 border-l-2 border-mint pl-2.5 text-[12px] leading-snug text-ink-2">
-              <span className="font-mono text-[11px] text-mint-ink">Clause 8.1 · p. 2</span>
-              <br />“Either party may terminate this agreement with 30 days&apos; written notice.”
-            </p>
+            <p className="mt-3 text-[0.88rem] leading-relaxed text-[#4a504c]">9. Governing Law and Disputes…</p>
           </figure>
-        </Card>
-      </Reveal>
+        </div>
+      </EvidenceLink>
+      <p className="mt-4 text-[0.78rem] text-ink-3">Illustration with a fictional agreement.</p>
     </section>
   );
 }
 
-const steps = [
-  { pill: "Step 1", title: "Upload", body: "Drop in a PDF. Clai reads every page with its headings and clause numbers." },
-  { pill: "Step 2", title: "Understand", body: "Each clause becomes a passage that remembers its page, section and clause." },
-  { pill: "Step 3", title: "Ask", body: "Speak or type. Clai searches, grades the evidence, and searches again if it's weak." },
-  { pill: "Step 4", title: "Trace", body: "Hear the answer, then open the cited clause, highlighted in the original PDF." },
+/* ── G. How it works ───────────────────────────────────────────────── */
+const STEPS = [
+  ["Upload", "Add a PDF agreement. It's read in your browser, page by page, with its sections and clause numbers."],
+  ["Explore", "Browse the outline and jump to any clause. Nothing is summarised away."],
+  ["Ask", "Type or speak a question. Clai searches the whole agreement for the passage that answers it."],
+  ["Verify", "Each answer quotes its clause and page. Open it in the document to read the context."],
 ];
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className={`${column} mt-40 scroll-mt-24 text-center`} aria-labelledby="how-heading">
-      <h2 id="how-heading" className={serif}>How it works</h2>
-      <p className="mx-auto mt-4 max-w-xl text-ink-2">From a PDF to an answer you can check, in four steps.</p>
-      <Reveal className="mt-12 grid gap-4 text-center sm:grid-cols-2 lg:grid-cols-4">
-        {steps.map((s) => (
-          <div key={s.title} data-reveal className="rounded-2xl border border-line bg-surface-2 px-6 py-8">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-2.5 py-0.5 text-xs text-ink-2">
-              <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-mint" />
-              {s.pill}
-            </span>
-            <h3 className="mt-4 text-lg font-medium tracking-[-0.02em]">{s.title}</h3>
-            <p className="mt-2 text-sm leading-[1.6] text-ink-2">{s.body}</p>
-          </div>
-        ))}
-      </Reveal>
-    </section>
-  );
-}
-
-export function OpenSource() {
-  return (
-    <section className="mx-auto mt-40 max-w-md px-6 text-center" aria-labelledby="free-heading">
-      <h2 id="free-heading" className={serif}>Free and open source</h2>
-      <p className="mt-8 font-serif text-[4rem] leading-none text-ink">₹0</p>
-      <p className="mt-3 text-sm text-ink-2">MIT licensed. Runs on your own machine with free, local models.</p>
-      <div className="mt-8 flex justify-center">
-        <PillLink href={site.repo} external>
-          View on GitHub
-        </PillLink>
-      </div>
-    </section>
-  );
-}
-
-const pipeline = [
-  ["PDF", "PyMuPDF · pages, sections, clauses"],
-  ["Search", "Qdrant vectors + BM25, fused with RRF"],
-  ["Rerank", "local cross-encoder"],
-  ["Reason", "LangGraph · grade, correct, cite"],
-  ["Answer", "one LLM call, or a direct quote"],
-  ["Voice", "LiveKit · Whisper · Piper"],
-];
-
-export function Developers() {
-  return (
-    <section className="mx-auto mt-40 max-w-3xl px-6 text-center" aria-labelledby="dev-heading">
-      <h2 id="dev-heading" className={serif}>Built for engineers who care where answers come from.</h2>
-      <p className="mx-auto mt-4 max-w-xl text-ink-2">Every stage is a separate, tested module. The language model writes the answer and nothing else.</p>
-      <Reveal className="mt-12 rounded-2xl border border-line bg-surface-2 p-3 text-left">
-        <ol className="divide-y divide-line rounded-xl bg-white">
-          {pipeline.map(([stage, detail], i) => (
-            <li key={stage} data-reveal className="flex items-baseline gap-4 px-5 py-4">
-              <span className="w-6 text-sm tabular-nums text-ink-3">{String(i + 1).padStart(2, "0")}</span>
-              <span className="w-20 font-medium">{stage}</span>
-              <span className="text-sm text-ink-2">{detail}</span>
+    <section className={`${wrap} mt-32 md:mt-44`} aria-labelledby="how">
+      <Reveal className="grid gap-10 md:grid-cols-12">
+        <div className="md:col-span-4">
+          <span data-reveal>
+            <Marker n="04">How it works</Marker>
+          </span>
+          <h2 id="how" data-reveal className="display mt-6 text-[clamp(2.3rem,4.6vw,3.6rem)]">
+            Upload, explore, ask, <em>verify.</em>
+          </h2>
+          <Link data-reveal href="/how-it-works" className="mt-6 inline-flex items-center gap-2 text-ink-2 hover:text-ink">
+            The full walkthrough <ArrowRight aria-hidden className="h-4 w-4" />
+          </Link>
+        </div>
+        <ol className="relative md:col-span-8">
+          <span aria-hidden className="absolute left-[0.55rem] top-2 h-[calc(100%-1rem)] w-px bg-line" />
+          {STEPS.map(([title, body], i) => (
+            <li key={title} data-reveal className="relative grid grid-cols-[2.5rem_1fr] gap-4 pb-10 last:pb-0">
+              <span aria-hidden className={`relative mt-2 h-[1.15rem] w-[1.15rem] border ${i === 3 ? "border-mint bg-mint" : "border-line-strong bg-bg"}`} />
+              <div>
+                <p className="font-mono text-[0.75rem] text-ink-3">0{i + 1}</p>
+                <h3 className="display mt-1 text-[1.9rem]">{title}</h3>
+                <p className="mt-2 max-w-[48ch] leading-relaxed text-ink-2">{body}</p>
+              </div>
             </li>
           ))}
         </ol>
       </Reveal>
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm">
-        <Link href="/technology" className="text-ink underline-offset-4 hover:underline">
-          Explore the technology →
-        </Link>
-        <a href={site.repo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-ink underline-offset-4 hover:underline">
-          <GitHubIcon className="h-4 w-4" /> Source on GitHub
-        </a>
-      </div>
     </section>
   );
 }
 
-export function FinalCTA() {
+/* ── H. Capabilities ───────────────────────────────────────────────── */
+const CAPS = [
+  ["Natural questions", "“Can I leave early?” finds “termination for convenience”. Clai maps everyday words to how agreements are written."],
+  ["Follow-ups", "Context carries over, so short follow-ups like “and for cause?” refer back to what you just asked."],
+  ["Source references", "Answers quote the agreement and name the clause, section and page. Clai doesn't paraphrase what it can't cite."],
+  ["Honest gaps", "When the agreement doesn't cover something, Clai says so and names what's missing instead of guessing."],
+  ["Voice", "Speak your question and hear the answer read aloud in browsers that support it. Text always works."],
+  ["Document navigation", "An outline of every section and clause, with the cited passage highlighted on its page."],
+];
+
+export function Capabilities() {
   return (
-    <section className="mt-40 px-6 text-center" aria-labelledby="cta-heading">
-      <h2 id="cta-heading" className={serif}>Your agreement has answers. Talk to it.</h2>
-      <div className="mt-10 flex justify-center">
-        <PillLink href="/talk">Talk to Clai</PillLink>
-      </div>
+    <section className={`${wrap} mt-32 md:mt-44`} aria-labelledby="caps">
+      <Reveal>
+        <div data-reveal className="flex items-end justify-between gap-6 border-b border-line pb-8">
+          <h2 id="caps" className="display text-[clamp(2.3rem,4.6vw,3.6rem)]">
+            What it does today
+          </h2>
+          <Link href="/product" className="hidden shrink-0 items-center gap-2 text-ink-2 hover:text-ink md:inline-flex">
+            Product overview <ArrowRight aria-hidden className="h-4 w-4" />
+          </Link>
+        </div>
+        <dl>
+          {CAPS.map(([name, body]) => (
+            <div key={name} data-reveal className="grid gap-2 border-b border-line py-7 md:grid-cols-12 md:gap-8">
+              <dt className="display text-[1.55rem] md:col-span-4">{name}</dt>
+              <dd className="max-w-[56ch] leading-relaxed text-ink-2 md:col-span-7 md:col-start-6">{body}</dd>
+            </div>
+          ))}
+        </dl>
+      </Reveal>
+    </section>
+  );
+}
+
+/* ── I. Privacy ────────────────────────────────────────────────────── */
+export function Privacy() {
+  return (
+    <section className={`${wrap} mt-32 md:mt-44`} aria-labelledby="privacy-h">
+      <Reveal className="grid gap-12 md:grid-cols-12">
+        <div className="md:col-span-5">
+          <span data-reveal>
+            <Marker n="05">Privacy</Marker>
+          </span>
+          <h2 id="privacy-h" data-reveal className="display mt-6 text-[clamp(2.3rem,4.6vw,3.6rem)]">
+            Your document <em>stays with you.</em>
+          </h2>
+        </div>
+        <div className="grid gap-10 sm:grid-cols-2 md:col-span-7">
+          <div data-reveal>
+            <p className="eyebrow text-mint">Stays on your device</p>
+            <ul className="mt-4 space-y-3 text-ink-2">
+              <li>The PDF you add. It&apos;s read in your browser and never uploaded.</li>
+              <li>Search, answers and citations, all computed locally.</li>
+              <li>Your conversation, which is gone when you close the tab.</li>
+            </ul>
+          </div>
+          <div data-reveal>
+            <p className="eyebrow">May leave it</p>
+            <ul className="mt-4 space-y-3 text-ink-2">
+              <li>Your voice, if you use the microphone. Some browsers, including Chrome, send speech to their own recognition service.</li>
+              <li>Nothing else. Clai has no server for the public version, no analytics, and no accounts.</li>
+            </ul>
+            <Link href="/privacy" className="mt-6 inline-flex items-center gap-2 text-ink hover:text-mint">
+              Read the privacy notice <ArrowRight aria-hidden className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/* ── J. Final call to action ───────────────────────────────────────── */
+export function FinalCta() {
+  return (
+    <section className={`${wrap} mt-32 md:mt-44`}>
+      <Reveal className="border-t border-line pt-16">
+        <h2 data-reveal className="display max-w-[14ch] text-[clamp(2.8rem,7vw,6rem)]">
+          The details are in the document. <em>Find them.</em>
+        </h2>
+        <div data-reveal className="mt-10">
+          <PrimaryCta />
+        </div>
+      </Reveal>
     </section>
   );
 }

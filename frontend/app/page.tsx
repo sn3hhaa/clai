@@ -1,31 +1,18 @@
-import { Footer } from "@/components/shared/footer";
-import { Navbar } from "@/components/shared/navbar";
-import {
-  Developers,
-  Features,
-  FinalCTA,
-  Hero,
-  Highlights,
-  HowItWorks,
-  OpenSource,
-  ProductBand,
-} from "@/components/home/sections";
+import { SitePage } from "@/components/shared/page";
+import { Capabilities, Conversation, Evidence, Film, FinalCta, Hero, HowItWorks, Privacy, Problem } from "@/components/home/sections";
 
 export default function HomePage() {
   return (
-    <>
-      <Navbar />
-      <main id="main">
-        <Hero />
-        <ProductBand />
-        <Features />
-        <Highlights />
-        <HowItWorks />
-        <OpenSource />
-        <Developers />
-        <FinalCTA />
-      </main>
-      <Footer />
-    </>
+    <SitePage>
+      <Hero />
+      <Film />
+      <Problem />
+      <Conversation />
+      <Evidence />
+      <HowItWorks />
+      <Capabilities />
+      <Privacy />
+      <FinalCta />
+    </SitePage>
   );
 }

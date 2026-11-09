@@ -1,27 +1,33 @@
 @import "tailwindcss";
 
-/* ── Clai design tokens ─────────────────────────────────────────────── */
+/* ── Clai design tokens (dark identity) ──────────────────────────────
+   Contrast on --bg: ink 17:1 · ink-2 8.6:1 · ink-3 4.9:1 · sage 12:1 */
 :root {
-  --bg: #ffffff;
-  --surface: #ffffff;
-  --surface-2: #f5f4f1; /* warm card grey */
-  --ink: #0f0f0e;
-  --ink-2: #626260;
-  --ink-3: #8b8b88;
-  --line: #e7e6e2;
-  --line-strong: #d6d5d0;
-  --mint: #2e9e85; /* graphics & marks only */
-  --mint-ink: #1f7a66; /* text on light backgrounds (AA) */
-  --mint-soft: #ddf3ec;
-  --seafoam: #7fe0c4;
-  --amber-ink: #8a5a12;
-  --amber-soft: #fbf0dc;
-  --danger: #b4372f;
-  --danger-soft: #fbe7e5;
+  --bg: #0c0e0d;
+  --bg-2: #101311; /* alternate band */
+  --surface: #151917; /* raised */
+  --surface-2: #1c211e; /* raised, interactive */
+  --ink: #f2f1ec;
+  --ink-2: #a9aea8;
+  --ink-3: #7a827c;
+  --line: #242a26;
+  --line-strong: #343c37;
+  --mint: #b8d9c6; /* sage: the accent, used sparingly */
+  --mint-ink: #b8d9c6;
+  --mint-deep: #719985;
+  --mint-hover: #d1e8d9;
+  --mint-soft: rgba(184, 217, 198, 0.12);
+  --seafoam: #8fc4a8;
+  --amber-ink: #e3c48f;
+  --amber-soft: rgba(227, 196, 143, 0.1);
+  --danger: #ec8f84;
+  --danger-soft: rgba(236, 143, 132, 0.1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
   --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-ink: var(--ink);
@@ -31,21 +37,25 @@
   --color-line-strong: var(--line-strong);
   --color-mint: var(--mint);
   --color-mint-ink: var(--mint-ink);
+  --color-mint-deep: var(--mint-deep);
+  --color-mint-hover: var(--mint-hover);
   --color-mint-soft: var(--mint-soft);
   --color-seafoam: var(--seafoam);
   --color-amber-ink: var(--amber-ink);
   --color-amber-soft: var(--amber-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-stix), ui-serif, Georgia, serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
-  --tracking-tightest: -0.045em;
+  --radius-sm: 4px;
+  --radius-md: 8px;
 }
 
 html {
   background: var(--bg);
   color: var(--ink);
+  color-scheme: dark;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -56,26 +66,32 @@ body {
 }
 
 ::selection {
-  background: var(--mint-soft);
-  color: var(--ink);
+  background: var(--mint);
+  color: var(--bg);
 }
 
 :focus-visible {
-  outline: 2px solid var(--mint-ink);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 2px solid var(--mint);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-/* Subtle editorial grid used behind some sections. */
-.bg-grid {
-  background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--line) 70%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--line) 70%, transparent) 1px, transparent 1px);
-  background-size: 48px 48px;
+/* Display type: Newsreader at large optical size, tight but not cramped. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  letter-spacing: -0.022em;
+  line-height: 1.02;
+}
+.display em,
+.display i {
+  font-style: italic;
+  color: var(--mint);
 }
 
-/* Monospace label: "── 01 / UPLOAD" */
-.label-mono {
+/* Small caps-style label used for section markers: "§ 02  The conversation" */
+.eyebrow {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
@@ -83,11 +99,147 @@ body {
   color: var(--ink-3);
 }
 
+/* Highlighted clause text: the brand's "evidence" treatment. */
+.evidence-highlight {
+  background: linear-gradient(transparent 12%, var(--mint) 12%, var(--mint) 92%, transparent 92%);
+  color: var(--bg);
+  padding: 0 0.1em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
 /* PDF text-layer evidence highlight */
 .evidence-mark {
-  background: color-mix(in oklab, var(--seafoam) 55%, transparent);
+  background: color-mix(in oklab, var(--mint) 70%, transparent);
   color: transparent;
-  border-radius: 2px;
+  border-radius: 1px;
+}
+
+/* Long-form reading (docs, legal pages). */
+.prose-clai {
+  color: var(--ink-2);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.prose-clai h2 {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 3rem 0 1rem;
+  letter-spacing: -0.015em;
+  scroll-margin-top: 6rem;
+}
+.prose-clai h3 {
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin: 2rem 0 0.5rem;
+  scroll-margin-top: 6rem;
+}
+.prose-clai p,
+.prose-clai ul,
+.prose-clai ol {
+  margin: 0 0 1.1rem;
+  max-width: 68ch;
+}
+.prose-clai ul {
+  list-style: none;
+  padding: 0;
+}
+.prose-clai ul > li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin: 0.35rem 0;
+}
+.prose-clai ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.8em;
+  width: 0.55rem;
+  height: 1px;
+  background: var(--mint-deep);
+}
+.prose-clai ol {
+  padding-left: 1.25rem;
+  list-style: decimal;
+}
+.prose-clai ol > li {
+  margin: 0.35rem 0;
+  padding-left: 0.25rem;
+}
+.prose-clai ol > li::marker {
+  font-family: var(--font-mono);
+  color: var(--ink-3);
+  font-size: 0.85em;
+}
+.prose-clai a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--mint-deep);
+  text-underline-offset: 0.2em;
+}
+.prose-clai a:hover {
+  text-decoration-color: var(--mint);
+}
+.prose-clai strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+.prose-clai code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+.prose-clai pre {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 0 0 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.prose-clai pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+.prose-clai table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+}
+.prose-clai th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line-strong);
+  padding: 0.6rem 0.75rem 0.6rem 0;
+}
+.prose-clai td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.6rem 0.75rem 0.6rem 0;
+  vertical-align: top;
+}
+.prose-clai blockquote {
+  border-left: 2px solid var(--mint-deep);
+  padding-left: 1rem;
+  margin: 0 0 1.25rem;
+  color: var(--ink);
+}
+.prose-clai hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 2.5rem 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

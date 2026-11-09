@@ -1,62 +1,118 @@
 import Link from "next/link";
-import { repoFile, repoTree, site } from "@/lib/site";
-import { Painting } from "./painting";
-import { SocialLinks } from "./social-icons";
+import { repoFile, site } from "@/lib/site";
+import { LogoMark } from "./logo";
 
-const links: { label: string; href: string }[] = [
-  { label: "How it works", href: "/#how-it-works" },
-  { label: "Technology", href: "/technology" },
-  { label: "Docs", href: repoTree("docs") },
-  { label: "API", href: repoFile("docs/api/reference.md") },
-  { label: "Architecture", href: repoFile("ARCHITECTURE.md") },
-  { label: "Roadmap", href: repoFile("docs/roadmap.md") },
-  { label: "Contributing", href: repoFile("CONTRIBUTING.md") },
-  { label: "Security", href: repoFile("SECURITY.md") },
-  { label: "License", href: repoFile("LICENSE") },
+type FooterLink = { label: string; href: string };
+
+const columns: { title: string; links: FooterLink[] }[] = [
+  {
+    title: "Product",
+    links: [
+      { label: "Overview", href: "/product" },
+      { label: "How it works", href: "/how-it-works" },
+      { label: "Open Clai", href: "/talk" },
+      { label: "Technology", href: "/technology" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Documentation", href: "/docs" },
+      { label: "Getting started", href: "/docs/getting-started" },
+      { label: "FAQ", href: "/docs/faq" },
+      { label: "Privacy", href: "/privacy" },
+    ],
+  },
+  {
+    title: "Project",
+    links: [
+      { label: "About", href: "/about" },
+      { label: "Contact", href: "/contact" },
+      { label: "Source code", href: site.repo },
+      { label: "Roadmap", href: repoFile("docs/roadmap.md") },
+    ],
+  },
+  {
+    title: "Connect",
+    links: [
+      { label: "GitHub", href: site.social.github },
+      ...(site.social.linkedin ? [{ label: "LinkedIn", href: site.social.linkedin }] : []),
+      ...(site.social.x ? [{ label: "X", href: site.social.x }] : []),
+      ...(site.social.email ? [{ label: "Email", href: `mailto:${site.social.email}` }] : []),
+      { label: "Report an issue", href: site.issues },
+    ],
+  },
 ];
+
+function FooterAnchor({ href, children }: { href: string; children: React.ReactNode }) {
+  const cls = "text-ink-2 transition-colors hover:text-ink";
+  return href.startsWith("http") || href.startsWith("mailto:") ? (
+    <a href={href} className={cls} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer">
+      {children}
+    </a>
+  ) : (
+    <Link href={href} className={cls}>
+      {children}
+    </Link>
+  );
+}
 
 export function Footer() {
   return (
-    <footer className="mt-32">
-      <div className="mx-auto max-w-5xl px-6 pb-10">
-        <div className="flex flex-col items-center gap-4 border-t border-line pt-10 text-center">
-          <SocialLinks />
-          <p className="max-w-xl text-xs leading-relaxed text-ink-3">
-            Clai explains what an agreement says and shows where it says it. It is not legal advice and does not replace
-            a qualified lawyer.
+    <footer className="relative mt-32 overflow-hidden border-t border-line bg-bg-2">
+      <div className="mx-auto max-w-[1200px] px-5 md:px-8">
+        <div className="grid gap-12 py-16 md:grid-cols-[1.3fr_repeat(4,1fr)] md:gap-8">
+          <div className="max-w-xs">
+            <p className="display text-[1.65rem] leading-[1.15] text-ink">
+              Read agreements by <em>asking them.</em>
+            </p>
+            <p className="mt-4 text-[0.9rem] leading-relaxed text-ink-3">
+              Clai answers questions about an agreement and shows the clause behind every answer.
+            </p>
+          </div>
+          {columns.map((column) => (
+            <nav key={column.title} aria-label={column.title}>
+              <h2 className="eyebrow mb-5">{column.title}</h2>
+              <ul className="space-y-3 text-[0.93rem]">
+                {column.links.map((link) => (
+                  <li key={link.label}>
+                    <FooterAnchor href={link.href}>{link.label}</FooterAnchor>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+        </div>
+      </div>
+
+      {/* Oversized wordmark: the footer's signature. Decorative; the brand name is in the header. */}
+      <div aria-hidden className="pointer-events-none select-none border-t border-line">
+        <div className="mx-auto flex max-w-[1200px] items-end gap-[3vw] px-5 pt-10 md:px-8">
+          <LogoMark className="mb-[1.4vw] h-[13vw] max-h-[150px] w-[13vw] max-w-[150px] text-ink/90" title="" />
+          <span className="font-sans text-[22vw] font-semibold leading-[0.74] tracking-[-0.07em] text-ink/90 md:text-[min(19vw,240px)]">
+            cla<span className="relative">ı<span className="absolute left-[0.03em] top-[0.07em] h-[0.11em] w-[0.4em] bg-mint" /></span>
+          </span>
+        </div>
+      </div>
+
+      <div className="border-t border-line">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-3 px-5 py-6 text-[0.8rem] leading-relaxed text-ink-3 md:flex-row md:items-center md:justify-between md:px-8">
+          <p className="max-w-2xl">
+            Clai helps you read agreements. It isn&apos;t legal advice, and it can be wrong, so check the cited clause
+            and ask a qualified lawyer about anything that matters.
+          </p>
+          <p className="shrink-0">
+            Open source ·{" "}
+            <Link href="/terms" className="hover:text-ink">
+              Terms
+            </Link>{" "}
+            ·{" "}
+            <Link href="/privacy" className="hover:text-ink">
+              Privacy
+            </Link>
           </p>
         </div>
       </div>
-      <div className="relative isolate flex min-h-[220px] flex-col justify-end">
-        <Painting size={1280} position="center 75%" />
-        <span aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-black/45" />
-        <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-6 pb-8 text-[13px] text-white md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="font-medium">Clai</p>
-            <p className="mt-1 max-w-sm text-[11px] leading-snug text-white/75">
-              Painting: George Inness, <cite>Landscape</cite> (1884 or 1889), The Metropolitan Museum of Art, public domain.
-            </p>
-          </div>
-          <nav aria-label="Footer">
-            <ul className="flex flex-wrap gap-x-5 gap-y-2">
-              {links.map(({ label, href }) => (
-                <li key={label}>
-                  {href.startsWith("http") ? (
-                    <a href={href} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                      {label}
-                    </a>
-                  ) : (
-                    <Link href={href} className="hover:underline">
-                      {label}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </div>
-      <span className="sr-only">{site.fullName}</span>
     </footer>
   );
 }

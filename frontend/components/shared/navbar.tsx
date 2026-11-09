@@ -1,38 +1,89 @@
+"use client";
+
+import * as React from "react";
 import Link from "next/link";
-import { site } from "@/lib/site";
-import { LogoMark } from "./logo";
+import { usePathname } from "next/navigation";
+import { ArrowUpRight, Menu, X } from "lucide-react";
+import { nav } from "@/lib/site";
+import { cn } from "@/lib/utils";
+import { Logo } from "./logo";
 
 export function Navbar() {
+  const [open, setOpen] = React.useState(false);
+  const pathname = usePathname();
+  React.useEffect(() => setOpen(false), [pathname]);
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const active = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
   return (
-    <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 pb-10 pt-12 sm:pt-16">
-      <Link href="/" aria-label="Clai home" className="flex items-center gap-2">
-        <LogoMark className="h-6 w-6 text-ink" title="" />
-        <span className="font-medium tracking-[-0.02em]">Clai</span>
-      </Link>
-      <nav aria-label="Main">
-        <ul className="flex items-center gap-1 text-[13px] text-ink">
-          <li className="hidden sm:block">
-            <Link href="/#how-it-works" className="rounded-full px-3 py-2 hover:bg-surface-2">
-              How it works
-            </Link>
-          </li>
-          <li className="hidden sm:block">
-            <Link href="/technology" className="rounded-full px-3 py-2 hover:bg-surface-2">
-              Technology
-            </Link>
-          </li>
-          <li>
-            <a href={site.repo} target="_blank" rel="noopener noreferrer" className="rounded-full px-3 py-2 hover:bg-surface-2">
-              GitHub
-            </a>
-          </li>
-          <li className="ml-2">
-            <Link href="/talk" className="rounded-full bg-ink px-4 py-2 font-medium text-white transition-colors hover:bg-ink/85">
-              Talk to Clai
-            </Link>
-          </li>
+    <header className="sticky top-0 z-50 border-b border-line/70 bg-bg/80 backdrop-blur-md supports-[backdrop-filter]:bg-bg/70">
+      <nav aria-label="Main" className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-5 md:px-8">
+        <Link href="/" aria-label="Clai home" className="shrink-0">
+          <Logo />
+        </Link>
+        <ul className="hidden items-center gap-8 text-[0.9rem] md:flex">
+          {nav.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                aria-current={active(item.href) ? "page" : undefined}
+                className={cn("transition-colors hover:text-ink", active(item.href) ? "text-ink" : "text-ink-2")}
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
         </ul>
+        <div className="hidden items-center gap-6 md:flex">
+          <Link href="/contact" className="text-[0.9rem] text-ink-2 transition-colors hover:text-ink">
+            Contact
+          </Link>
+          <Link
+            href="/talk"
+            className="group inline-flex items-center gap-1.5 bg-ink px-4 py-2 text-[0.88rem] font-medium text-bg transition-colors hover:bg-mint-hover"
+          >
+            Open Clai
+            <ArrowUpRight aria-hidden className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-px group-hover:translate-x-px" />
+          </Link>
+        </div>
+        <button
+          type="button"
+          className="-mr-2 grid h-10 w-10 place-items-center text-ink md:hidden"
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          aria-label={open ? "Close menu" : "Open menu"}
+          onClick={() => setOpen((o) => !o)}
+        >
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </nav>
+
+      {open && (
+        <div id="mobile-menu" className="fixed inset-x-0 bottom-0 top-16 z-50 flex flex-col bg-bg px-5 pb-8 pt-6 md:hidden">
+          <ul className="flex flex-col">
+            {[...nav, { label: "Contact", href: "/contact" }].map((item) => (
+              <li key={item.href} className="border-b border-line">
+                <Link href={item.href} className="display block py-4 text-[2rem]">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link href="/talk" className="mt-auto inline-flex items-center justify-center gap-2 bg-ink py-4 font-medium text-bg">
+            Open Clai <ArrowUpRight aria-hidden className="h-4 w-4" />
+          </Link>
+        </div>
+      )}
     </header>
   );
 }

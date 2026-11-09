@@ -1,12 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, STIX_Two_Text } from "next/font/google";
+import { Geist, Newsreader } from "next/font/google";
 import localFont from "next/font/local";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
-const stix = STIX_Two_Text({ variable: "--font-stix", subsets: ["latin"], display: "swap", weight: ["400", "500"] });
-// Full Geist Mono (OFL) from the repo: the Google Fonts subset lacks the box-drawing glyphs used in ASCII frames.
+const geist = Geist({ variable: "--font-geist", subsets: ["latin"], display: "swap" });
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  display: "swap",
+  style: ["normal", "italic"],
+  axes: ["opsz"],
+});
+// Full Geist Mono (OFL): the Google subset lacks box-drawing glyphs.
 const geistMono = localFont({ src: "./fonts/GeistMono-Regular.ttf", variable: "--font-geist-mono", display: "swap" });
 
 export const metadata: Metadata = {
@@ -28,17 +34,17 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
-  colorScheme: "light",
+  themeColor: "#0c0e0d",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${stix.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geist.variable} ${newsreader.variable} ${geistMono.variable}`}>
       <body className="font-sans text-ink antialiased">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-ink focus:px-3 focus:py-2 focus:text-bg"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-ink focus:px-3 focus:py-2 focus:text-bg"
         >
           Skip to content
         </a>

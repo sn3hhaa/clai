@@ -1,25 +1,26 @@
 import { cn } from "@/lib/utils";
 
-const RING = "M47.43 13.61 A24 24 0 1 0 47.43 50.39 L41 42.72 A14 14 0 1 1 41 21.28 Z";
+// Geometry shared with assets/branding/generate.py ("the aperture" + detached evidence bar).
+const APERTURE = "M38 10 H17 Q6 10 6 21 V43 Q6 54 17 54 H38 V44 H18 Q16 44 16 42 V22 Q16 20 18 20 H38 Z";
 
-/** Clai mark: an open "C" (conversation) holding an evidence block (the cited passage). */
 export function LogoMark({ className, title = "Clai" }: { className?: string; title?: string }) {
   return (
-    <svg viewBox="0 0 64 64" className={cn("h-7 w-7", className)} role="img" aria-label={title}>
-      <g transform="translate(2 0)">
-        <path d={RING} fill="currentColor" />
-        <rect x="42.5" y="27" width="10" height="10" rx="1.5" fill="var(--mint)" />
-      </g>
+    <svg viewBox="0 0 64 64" className={cn("h-7 w-7", className)} role={title ? "img" : undefined} aria-label={title || undefined} aria-hidden={title ? undefined : true}>
+      <path d={APERTURE} fill="currentColor" />
+      <rect x="43" y="28.5" width="15" height="7" rx="1.5" fill="var(--mint)" />
     </svg>
   );
 }
 
+/** Mark + wordmark. The wordmark is live text in Geist so it stays crisp; the brand files hold the outlined version. */
 export function Logo({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center gap-2 text-ink", className)}>
-      <LogoMark className="h-7 w-7" title="" />
-      <span className="text-[1.35rem] font-semibold tracking-[-0.04em] leading-none">clai</span>
-      <span className="sr-only">Clai home</span>
+      <LogoMark className="h-[22px] w-[22px]" title="" />
+      <span aria-hidden className="relative text-[1.2rem] font-semibold leading-none tracking-[-0.045em]">
+        cla<span className="relative">ı<span aria-hidden className="absolute left-[0.02em] top-[0.06em] h-[0.12em] w-[0.42em] rounded-[1px] bg-mint" /></span>
+      </span>
+      <span className="sr-only">Clai</span>
     </span>
   );
 }
