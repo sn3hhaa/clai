@@ -27,15 +27,14 @@ Last updated: 2026-11-08
 
 ## Current focus
 
-Phases 1–7 are built and tested locally. Phase 8 (release) is mostly done; what's left:
+The public product (browser engine + dark redesign) is built and verified locally. Next:
 
-1. Upload the social preview image (Settings → Social preview).
-2. Review Dependabot PRs.
-3. Keep CI green.
-4. **Human voice acceptance test**, then mark voice Verified.
-5. Optional: LLM-mode evaluation with an OpenRouter key.
+1. Push, then confirm CI and the Pages deploy, and crawl the live site.
+2. Manual voice check in Chrome/Safari (browser engine) and the real-mic acceptance test (server).
+3. Held-out evaluation for the server engine.
+4. Review the open Dependabot PRs (major bumps: TypeScript 7, ESLint 10).
 
 ## Design direction
 
-The owner's reference for the website is **sort.to**, followed closely (see CLAUDE.md →
-Design principles).
+Clai's own dark editorial identity. sort.to is only a quality benchmark (see CLAUDE.md → Design
+principles and assets/branding/README.md).

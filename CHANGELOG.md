@@ -5,7 +5,23 @@ All notable changes to Clai. The format follows
 
 ## [Unreleased]
 
-### Added
+### Added (2026-11-09: public product redesign)
+
+- Browser engine: the public site reads PDFs, answers and cites entirely in the browser
+  (pdf.js, clause detection, BM25 + RRF, coverage grading, refusals that name missing terms).
+- Browser voice via the Web Speech API, with honest feature detection and fallbacks.
+- New dark identity: "aperture" mark, wordmark, Newsreader/Geist type, redesigned Aura.
+- Progressive /talk: upload, then conversation, with document and evidence in a contextual panel.
+- Pages: product, how it works, technology, about, contact, privacy, terms, 404, and eight
+  on-site documentation pages with search, a table of contents and previous/next links.
+- Product walkthrough recorded from the real app, with captions and a poster.
+- Held-out evaluation set (12 questions) for the browser engine.
+
+### Changed
+
+- MkDocs developer documentation moved to /clai/reference/.
+
+### Added (earlier)
 
 - PDF ingestion with validation (empty, non-PDF, corrupt, encrypted, scanned, size and
   page limits) and conservative section/clause detection with page provenance.

@@ -1,99 +1,167 @@
 import type { Metadata } from "next";
-import { SectionLabel } from "@/components/shared/ascii";
-import { Footer } from "@/components/shared/footer";
-import { Navbar } from "@/components/shared/navbar";
-import { repoFile } from "@/lib/site";
+import Link from "next/link";
+import { Band, PageIntro, SitePage } from "@/components/shared/page";
+import { Reveal } from "@/components/shared/reveal";
+import { repoFile, repoTree } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Technology",
-  description: "How Clai turns a PDF agreement into grounded, cited voice answers: ingestion, hybrid retrieval, LangGraph and LiveKit.",
+  description: "How Clai turns a PDF into answers with sources, what runs in your browser, and what needs a Clai server.",
 };
 
-const stages = [
+function Flow({ steps }: { steps: [string, string][] }) {
+  return (
+    <ol className="grid gap-px border border-line bg-line md:grid-cols-5">
+      {steps.map(([name, detail], i) => (
+        <li key={name} className="relative bg-bg p-5">
+          <p className="font-mono text-[0.72rem] text-ink-3">{String(i + 1).padStart(2, "0")}</p>
+          <p className="mt-3 font-medium text-ink">{name}</p>
+          <p className="mt-1.5 text-[0.88rem] leading-relaxed text-ink-2">{detail}</p>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+const TIERS = [
   {
-    n: "01",
-    title: "Ingestion with provenance",
-    body: "PyMuPDF extracts each line with its page, font size and weight. Clause numbering (8, 8.1, (a), Article IV) and headings are detected conservatively, and anything not detected stays empty instead of being guessed. Passages never cross a clause boundary, and each one records its document, page range, section, clause and heading.",
-    facts: ["PDF validation: encrypted, empty, scanned, size/page limits", "running headers & page numbers removed", "OCR not supported: scans are rejected with a clear message"],
+    label: "On this website",
+    tone: "text-mint",
+    items: [
+      "PDF reading with pdf.js, in a Web Worker",
+      "Section and clause detection with page provenance",
+      "BM25 search, intent expansion and rank fusion",
+      "Evidence grading and refusal with named missing terms",
+      "Quoted answers with clause and page citations",
+      "Voice through the Web Speech API (Chrome, Edge, Safari)",
+    ],
   },
   {
-    n: "02",
-    title: "Hybrid retrieval",
-    body: "Each passage is embedded with all-MiniLM-L6-v2 (384-d) into Qdrant and indexed with BM25. Both rankings are fused with Reciprocal Rank Fusion, then a local cross-encoder (ms-marco-MiniLM-L-6-v2) reranks the candidates. Every query is filtered to one document.",
-    facts: ["dense + lexical, fused with RRF (k = 60)", "cross-encoder relevance in [0, 1]", "tested for cross-document isolation"],
+    label: "In the repository, needs a Clai server",
+    tone: "text-ink",
+    items: [
+      "FastAPI backend with SQLite persistence",
+      "Vector search in Qdrant with MiniLM embeddings",
+      "Cross-encoder reranking",
+      "LangGraph agent with corrective search and citation checks",
+      "Optional written answers through a free OpenRouter model",
+      "Real-time voice over LiveKit with Whisper, Piper and barge-in",
+    ],
   },
   {
-    n: "03",
-    title: "A reasoning graph, not a prompt",
-    body: "A LangGraph state machine resolves follow-ups, classifies intent, plans queries, retrieves, reranks and grades the evidence. If the evidence is weak it runs one bounded corrective search with agreement-specific synonyms. Only then does it write an answer.",
-    facts: ["understand → classify → plan → retrieve → rerank → grade", "corrective search ≤ 1 retry", "abstains when evidence is insufficient"],
-  },
-  {
-    n: "04",
-    title: "One model call, validated",
-    body: "The language model (a free OpenRouter model, configurable) gets numbered sources and must return JSON with citations. Without a key, or when the free quota runs out, Clai quotes the best passage verbatim instead. Claims are then checked: numbers must appear in the cited text and citations must point to retrieved passages.",
-    facts: ["≤ 1 LLM call per question", "extractive fallback, never invented text", "grounded · partially grounded · insufficient"],
-  },
-  {
-    n: "05",
-    title: "Real-time voice",
-    body: "The browser joins a LiveKit room. A LiveKit Agents worker runs Silero VAD, a local turn detector, speech-to-text (faster-whisper, or Gradium) and text-to-speech (Piper, or Gradium). Each user turn calls the same /query endpoint the text box uses, and evidence is sent back to the page on a data channel.",
-    facts: ["one engine for voice and text", "barge-in via VAD", "GPU speech-to-text when available"],
+    label: "Planned",
+    tone: "text-amber-ink",
+    items: ["Text recognition (OCR) for scanned agreements", "Comparing two agreements", "Word (.docx) input", "Streaming speech recognition"],
   },
 ];
 
 export default function TechnologyPage() {
   return (
-    <>
-      <Navbar />
-      <main id="main" className="mx-auto max-w-5xl px-6 pb-8">
-        <SectionLabel>Technology</SectionLabel>
-        <h1 className="mt-6 max-w-3xl font-serif text-[2.5rem] font-normal leading-[1.2] sm:text-5xl">Built around evidence.</h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-2">
-          Each stage below is a separate module with its own tests. Read the{" "}
-          <a className="underline decoration-line-strong underline-offset-4 hover:decoration-ink" href={repoFile("ARCHITECTURE.md")} target="_blank" rel="noopener noreferrer">
-            architecture document
-          </a>{" "}
-          for the details.
-        </p>
+    <SitePage>
+      <PageIntro
+        marker="Technology"
+        title={
+          <>
+            Built so every answer <em>has a source.</em>
+          </>
+        }
+        lead="Clai has two engines that share one idea: never present an answer without the passage it came from. The public website runs the first one entirely in your browser."
+      />
 
-        <ol className="mt-16 divide-y divide-line border-y border-line">
-          {stages.map((s) => (
-            <li key={s.n} className="grid gap-6 py-12 md:grid-cols-[120px_1fr_1fr]">
-              <p className="font-mono text-sm text-mint-ink">{s.n}</p>
-              <div>
-                <h2 className="font-serif text-2xl font-normal">{s.title}</h2>
-                <p className="mt-3 leading-relaxed text-ink-2">{s.body}</p>
-              </div>
-              <ul className="space-y-2 self-start rounded-xl border border-line bg-surface p-5 font-mono text-xs text-ink-2">
-                {s.facts.map((f) => (
-                  <li key={f}>
-                    <span className="text-mint-ink">↳</span> {f}
-                  </li>
+      <Band marker="Availability">
+        <Reveal className="grid gap-10 md:grid-cols-3">
+          {TIERS.map((tier) => (
+            <div key={tier.label} data-reveal>
+              <h2 className={`eyebrow ${tier.tone}`}>{tier.label}</h2>
+              <ul className="mt-5 space-y-3 border-t border-line pt-5 text-[0.95rem] leading-relaxed text-ink-2">
+                {tier.items.map((item) => (
+                  <li key={item}>{item}</li>
                 ))}
               </ul>
-            </li>
+            </div>
           ))}
-        </ol>
+        </Reveal>
+      </Band>
 
-        <section className="mt-20" aria-labelledby="limits">
-          <SectionLabel>Limits, stated plainly</SectionLabel>
-          <h2 id="limits" className="mt-4 font-serif text-3xl font-normal">What Clai doesn&apos;t do</h2>
-          <ul className="mt-6 grid gap-3 text-ink-2 md:grid-cols-2">
-            {[
-              "It is not legal advice and doesn't judge whether terms are fair.",
-              "Scanned (image-only) PDFs aren't supported: there's no OCR yet.",
-              "Clause detection relies on numbering and headings; unusual layouts may get no clause labels.",
-              "The full app runs locally. GitHub Pages hosts only this website.",
-            ].map((t) => (
-              <li key={t} className="rounded-xl border border-line bg-surface p-4 text-sm leading-relaxed">
-                {t}
-              </li>
-            ))}
-          </ul>
-        </section>
-      </main>
-      <Footer />
-    </>
+      <Band marker="Browser engine" className="mt-24">
+        <h2 className="display text-[2.4rem]">What happens when you add a PDF</h2>
+        <p className="mt-4 max-w-[62ch] leading-relaxed text-ink-2">
+          Everything below runs in your browser tab. The file never leaves your device, and closing the tab discards it.
+        </p>
+        <div className="mt-10">
+          <Flow
+            steps={[
+              ["Read", "pdf.js extracts each line with its page and font size."],
+              ["Structure", "Numbering (8, 8.1, (a), Article IV) and headings mark sections and clauses. Nothing is guessed."],
+              ["Index", "Clauses become passages that remember page, section and clause, indexed with BM25."],
+              ["Retrieve", "Your question, plus words agreements use for the same idea, is searched and fused with RRF."],
+              ["Grade", "Weighted term coverage decides: quote the clause, or say what's missing."],
+            ]}
+          />
+        </div>
+      </Band>
+
+      <Band marker="Server engine" className="mt-24">
+        <h2 className="display text-[2.4rem]">The full pipeline, when you run a server</h2>
+        <p className="mt-4 max-w-[62ch] leading-relaxed text-ink-2">
+          The repository also contains a Python backend for people who run Clai themselves. It adds meaning-based
+          search, a reranking model, a reasoning graph and real-time voice. GitHub Pages can&apos;t run it, so the public
+          site doesn&apos;t use it. When <Link className="text-ink underline decoration-mint-deep underline-offset-4" href="/talk">Clai</Link>{" "}
+          detects a server, it offers it as the engine.
+        </p>
+        <div className="mt-10">
+          <Flow
+            steps={[
+              ["Ingest", "PyMuPDF with the same clause rules; SQLite stores documents and conversations."],
+              ["Hybrid search", "MiniLM vectors in Qdrant plus BM25, fused with RRF."],
+              ["Rerank", "A local cross-encoder scores each passage against the question."],
+              ["Reason", "A LangGraph state machine grades, re-searches once, and validates every citation."],
+              ["Speak", "LiveKit carries audio; Whisper listens, Piper answers, and you can interrupt."],
+            ]}
+          />
+        </div>
+      </Band>
+
+      <Band marker="Measured" className="mt-24">
+        <h2 className="display text-[2.4rem]">How well it works, honestly</h2>
+        <div className="mt-8 grid gap-8 md:grid-cols-2">
+          <div className="border-t border-line pt-5">
+            <p className="eyebrow">Browser engine</p>
+            <p className="mt-3 leading-relaxed text-ink-2">
+              On 12 held-out questions written after tuning, it answered <strong className="text-ink">8 correctly</strong> and
+              declined the other 4. In every one of those 4, the right clause was among the passages it showed. It
+              never cited a wrong clause, and it refused all 3 questions the agreement doesn&apos;t answer.
+            </p>
+          </div>
+          <div className="border-t border-line pt-5">
+            <p className="eyebrow">Server engine</p>
+            <p className="mt-3 leading-relaxed text-ink-2">
+              On the 23-question development set, the right clause ranked first 94.7% of the time and appeared in the
+              top five every time. Real-time voice answered in about 2.1 seconds on a laptop with a GPU.
+            </p>
+          </div>
+        </div>
+        <p className="mt-6 text-[0.85rem] text-ink-3">
+          Small, fictional test sets. The numbers show the system works end to end; they aren&apos;t a benchmark.{" "}
+          <a className="underline underline-offset-4 hover:text-ink" href={repoTree("evaluations")} target="_blank" rel="noopener noreferrer">
+            Raw results
+          </a>
+        </p>
+      </Band>
+
+      <Band marker="Open source" className="mt-24">
+        <p className="max-w-[62ch] leading-relaxed text-ink-2">
+          Clai is MIT-licensed. The{" "}
+          <Link className="text-ink underline decoration-mint-deep underline-offset-4" href="/docs/technical-reference">
+            technical reference
+          </Link>{" "}
+          covers the architecture, and the{" "}
+          <a className="text-ink underline decoration-mint-deep underline-offset-4" href={repoFile("ARCHITECTURE.md")} target="_blank" rel="noopener noreferrer">
+            repository
+          </a>{" "}
+          has the code, tests and design decisions.
+        </p>
+      </Band>
+    </SitePage>
   );
 }

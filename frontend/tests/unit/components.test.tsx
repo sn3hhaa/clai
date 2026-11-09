@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Aura, type AuraState } from "@/components/voice/aura";
-import { EvidencePanel } from "@/components/talk/evidence-panel";
+import { Conversation } from "@/components/talk/conversation";
 import { SocialLinks } from "@/components/shared/social-icons";
 import type { AnswerOut } from "@/lib/api/types";
 
@@ -38,21 +38,22 @@ const answer: AnswerOut = {
   timings_ms: { total: 120 },
 };
 
-describe("EvidencePanel", () => {
-  it("shows the answer, grounding and cited source, and navigates on click", () => {
-    const onShow = vi.fn();
-    render(<EvidencePanel answer={answer} onShow={onShow} activeChunk={null} />);
+describe("Conversation", () => {
+  it("shows a grounded answer with a citation chip that opens the source", () => {
+    const onCite = vi.fn();
+    render(<Conversation turns={[{ id: "1", question: answer.question, answer, via: "text" }]} onCite={onCite} activeChunk={null} />);
+    expect(screen.getByText("Quoted from the agreement")).toBeInTheDocument();
     expect(screen.getByText(/^Clause 8\.1 \(page 2\) says/)).toBeInTheDocument();
-    expect(screen.getAllByText(/30 days. written notice/)).toHaveLength(2); // answer + cited passage
-    expect(screen.getByText("grounded")).toBeInTheDocument();
     screen.getByRole("button", { name: "Show Clause 8.1 · p. 2 in the document" }).click();
-    expect(onShow).toHaveBeenCalledWith(answer.evidence[0]);
-    expect(screen.getByText("Also retrieved")).toBeInTheDocument();
+    expect(onCite).toHaveBeenCalledWith(answer, answer.evidence[0]);
   });
 
-  it("warns when the agreement does not answer", () => {
-    render(<EvidencePanel answer={{ ...answer, grounding: "insufficient", sufficient: false }} onShow={() => {}} activeChunk={null} />);
-    expect(screen.getByText(/doesn't appear to answer this/)).toBeInTheDocument();
+  it("marks refusals and offers the closest passages", () => {
+    const refused = { ...answer, grounding: "insufficient" as const, sufficient: false, citations: [], evidence: answer.evidence.map((e) => ({ ...e, cited: false })) };
+    render(<Conversation turns={[{ id: "1", question: "Dress code?", answer: refused, via: "voice" }]} onCite={() => {}} activeChunk={null} />);
+    expect(screen.getByText("Not found in the agreement")).toBeInTheDocument();
+    expect(screen.getByText(/closest passages/)).toBeInTheDocument();
+    expect(screen.getByText("Spoken")).toBeInTheDocument();
   });
 });
 

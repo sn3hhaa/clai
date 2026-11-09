@@ -2,132 +2,97 @@ import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const API = "http://127.0.0.1:8000";
 const SAMPLE = readFileSync(join(__dirname, "..", "..", "public", "samples", "services_agreement.pdf"));
 
-const doc = {
-  id: "0".repeat(32),
-  filename: "services_agreement.pdf",
-  status: "ready",
-  error: null,
-  size_bytes: SAMPLE.length,
-  page_count: 2,
-  chunk_count: 23,
-  created_at: "2026-11-07T00:00:00Z",
-  outline: [
-    { label: "8 Termination", clause: "8", page_number: 2, level: 1 },
-    { label: "8.1 Termination for convenience", clause: "8.1", page_number: 2, level: 2 },
-  ],
-};
-const evidence = {
-  chunk_id: `${doc.id}-c0017`,
-  page_number: 2,
-  page_end: 2,
-  section: "8. Termination",
-  clause: "8.1",
-  heading: "Termination for convenience",
-  text: "Either party may terminate this agreement with 30 days' written notice.",
-  score: 0.97,
-  cited: true,
-};
-
-/** Fictional API responses so the UI flow is tested without a backend in CI. */
-async function mockApi(page: Page) {
-  await page.route(`${API}/health`, (route) => route.fulfill({ json: { status: "ok" } }));
-  await page.route(`${API}/documents`, (route) => route.fulfill({ status: 201, json: doc }));
-  await page.route(`${API}/documents/${doc.id}/file`, (route) =>
-    route.fulfill({ status: 200, body: SAMPLE, contentType: "application/pdf" }),
-  );
-  await page.route(`${API}/query`, async (route) => {
-    const body = route.request().postDataJSON();
-    route.fulfill({
-      json: {
-        conversation_id: "conv1",
-        message_id: "m1",
-        question: body.question,
-        resolved_question: body.question,
-        intent: "termination",
-        answer: "Clause 8.1 (page 2) says: “Either party may terminate this agreement with 30 days' written notice.”",
-        spoken_answer: "According to clause 8.1, either party may terminate this agreement with 30 days' written notice.",
-        key_points: [],
-        citations: [evidence.chunk_id],
-        evidence: [evidence],
-        claims: [],
-        grounding: "grounded",
-        sufficient: true,
-        generation: "extractive",
-        retrieval_rounds: 1,
-        timings_ms: { total: 90 },
-      },
-    });
-  });
+/** No Clai server in these tests: /health fails, so /talk uses the browser engine (as on GitHub Pages). */
+async function noServer(page: Page) {
+  await page.route("http://127.0.0.1:8000/**", (route) => route.abort());
 }
 
-test("homepage presents the product and its sections", async ({ page }) => {
+test("homepage tells the product story", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle(/Clai — Talk to your agreements/);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Talk to your agreements.");
-  for (const heading of [
-    "Don't search the agreement. Talk to it.",
-    "Answers with a trail back to the agreement.",
-    "How it works",
-    "Free and open source",
-    "Built for engineers who care where answers come from.",
-    "Your agreement has answers. Talk to it.",
-  ]) {
-    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+  await expect(page).toHaveTitle(/Clai — Your agreement, explained/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your agreement, explained.");
+  for (const heading of [/written to be precise/, /Less searching/, /points back to/, /Upload, explore, ask/, "What it does today", /stays with you/, /The details are in the document/]) {
+    await expect(page.getByRole("heading", { name: heading }).first()).toBeVisible();
   }
+  await expect(page.locator("video source[type='video/mp4']")).toHaveAttribute("src", /walkthrough\.mp4$/);
   await expect(page.getByText("Demonstration · simulated audio")).toBeVisible();
-  await expect(page.getByText("Fictional example")).toBeVisible();
-  await expect(page.getByRole("img", { name: /The Clai workspace/ })).toBeVisible();
-  await expect(page.getByText(/George Inness/)).toBeVisible();
-  await expect(page.locator('link[rel="icon"]').first()).toHaveAttribute("href", /icon|favicon/);
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /opengraph-image/);
 });
 
-test("navigation reaches technology and talk", async ({ page }) => {
+test("every route renders with its own heading", async ({ page }) => {
+  const routes: [string, RegExp][] = [
+    ["/product", /answers back/],
+    ["/how-it-works", /answer you can check/],
+    ["/technology", /has a source/],
+    ["/about", /easier to read/],
+    ["/contact", /talk about Clai/],
+    ["/privacy", /stays with you/],
+    ["/terms", /reading tool/],
+    ["/docs", /using Clai/],
+    ["/docs/getting-started", /Getting started/],
+    ["/docs/faq", /FAQ/],
+  ];
+  for (const [path, heading] of routes) {
+    await page.goto(path);
+    await expect(page.getByRole("heading", { level: 1 }), path).toHaveText(heading);
+  }
+});
+
+test("unknown routes show the 404 page", async ({ page }) => {
+  await page.goto("/no-such-page");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/isn.t in the document/);
+});
+
+test("navigation and docs search", async ({ page, isMobile }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: "Talk to Clai" }).first().click();
-  await expect(page.getByRole("heading", { name: "What are we reading today?" })).toBeVisible();
-  await page.goto("/technology");
-  await expect(page.getByRole("heading", { level: 1, name: "Built around evidence." })).toBeVisible();
+  if (isMobile) await page.getByRole("button", { name: "Open menu" }).click();
+  await page.getByRole("link", { name: "Docs" }).first().click();
+  await expect(page).toHaveURL(/\/docs/);
+  await page.goto("/docs/using-clai");
+  await page.getByPlaceholder("Search docs").fill("browser");
+  const sidebar = page.getByRole("navigation", { name: "Documentation" });
+  await expect(sidebar.getByRole("link", { name: "Voice experience" })).toBeVisible();
+  await expect(sidebar.getByRole("link", { name: "Getting started" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: /Next/ })).toBeVisible();
 });
 
-test("explains when no backend is reachable (the hosted site)", async ({ page }) => {
-  await page.route(`${API}/health`, (route) => route.abort());
-  await page.goto("/talk");
-  await expect(page.getByRole("status").filter({ hasText: "backend isn't running" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "installation guide" })).toHaveAttribute("href", /docs\/installation\.md$/);
-});
-
-test("no backend warning when the backend responds", async ({ page }) => {
-  await mockApi(page);
-  await page.goto("/talk");
-  await expect(page.getByRole("heading", { name: "What are we reading today?" })).toBeVisible();
-  await expect(page.getByText("backend isn't running")).toHaveCount(0);
-});
-
-test("upload rejects non-PDF files before contacting the backend", async ({ page }) => {
+test("talk: rejects a non-PDF before reading it", async ({ page }) => {
+  await noServer(page);
   await page.goto("/talk");
   await page.locator('input[type="file"]').setInputFiles({ name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("hi") });
-  await expect(page.getByRole("alert").filter({ hasText: "PDF" })).toContainText("Please choose a .pdf file");
+  await expect(page.getByRole("alert").filter({ hasText: "PDF" })).toContainText("choose a .pdf file");
 });
 
-test("upload → ask → evidence → document navigation", async ({ page, isMobile }) => {
-  await mockApi(page);
+test("talk: real browser engine — upload, ask, cite, follow up, refuse, summarise", async ({ page, isMobile }) => {
+  await noServer(page);
   await page.goto("/talk");
+  await expect(page.getByText("Read in your browser · nothing is uploaded")).toBeVisible();
   await page.locator('input[type="file"]').setInputFiles({ name: "services_agreement.pdf", mimeType: "application/pdf", buffer: SAMPLE });
-  await expect(page.getByText("2 pages · 23 passages")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "What would you like to know?" })).toBeVisible({ timeout: 30_000 });
 
-  if (isMobile) await page.getByRole("tab", { name: "Clai voice" }).click();
-  await expect(page.getByRole("button", { name: /Start call/ })).toBeVisible();
-  await page.getByLabel("Ask a question by text").fill("What is the termination notice period?");
-  await page.getByRole("button", { name: "Ask", exact: true }).click();
+  const ask = async (q: string) => {
+    await page.getByLabel("Ask about this agreement").fill(q);
+    await page.keyboard.press("Enter");
+  };
+  await ask("Can I leave this agreement early?");
+  await expect(page.getByText(/Clause 8\.1 \(page 2\) says/)).toBeVisible();
 
-  if (isMobile) await page.getByRole("tab", { name: "Evidence" }).click();
-  await expect(page.getByText("grounded", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Show Clause 8.1 · p. 2 in the document" }).click();
-  // pdf.js is lazy-loaded; a cold dev-server module load can take several seconds.
   await expect(page.getByText("page 2 / 2")).toBeVisible({ timeout: 20_000 });
-  await expect(page.locator("mark.evidence-mark").first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator("mark.evidence-mark").first()).toBeVisible({ timeout: 20_000 });
+  if (isMobile) await page.getByRole("button", { name: "Close panel" }).click();
+
+  await ask("And what if the other party breaches it?");
+  await expect(page.getByText(/Clause 8\.2 \(page 2\) says/)).toBeVisible();
+  await ask("What is the dress code?");
+  await expect(page.getByText(/doesn.t mention “dress”/)).toBeVisible();
+
+  if (isMobile) await page.getByLabel("Ask about this agreement").blur();
+  const end = page.getByRole("button", { name: "End session" });
+  if (await end.isVisible()) {
+    await end.click();
+    await expect(page.getByRole("heading", { name: /3 questions, 2 answered/ })).toBeVisible();
+  }
 });

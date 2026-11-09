@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validatePdf } from "@/components/documents/uploader";
+import { validateFile } from "@/lib/session";
 import { highlightItem } from "@/components/documents/pdf-viewer";
 import { auraStateFor } from "@/lib/voice-state";
 import { sourceLabel } from "@/lib/utils";
@@ -48,13 +48,13 @@ describe("highlightItem", () => {
   });
 });
 
-describe("validatePdf", () => {
+describe("validateFile", () => {
   const file = (name: string, size: number, type = "application/pdf") => new File([new Uint8Array(size)], name, { type });
   it("accepts PDFs within limits and explains rejections", () => {
-    expect(validatePdf(file("a.pdf", 10))).toBeNull();
-    expect(validatePdf(file("notes.docx", 10, "application/msword"))).toMatch(/PDF/);
-    expect(validatePdf(file("a.pdf", 0))).toMatch(/empty/);
-    expect(validatePdf(file("a.pdf", 21 * 1024 * 1024))).toMatch(/20 MB/);
+    expect(validateFile(file("a.pdf", 10))).toBeNull();
+    expect(validateFile(file("notes.docx", 10, "application/msword"))).toMatch(/PDF/);
+    expect(validateFile(file("a.pdf", 0))).toMatch(/empty/);
+    expect(validateFile(file("a.pdf", 21 * 1024 * 1024))).toMatch(/20 MB/);
   });
 });
 

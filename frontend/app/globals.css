@@ -110,7 +110,7 @@ body {
 
 /* PDF text-layer evidence highlight */
 .evidence-mark {
-  background: color-mix(in oklab, var(--mint) 70%, transparent);
+  background: color-mix(in oklab, var(--seafoam) 80%, transparent);
   color: transparent;
   border-radius: 1px;
 }

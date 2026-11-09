@@ -1,7 +1,7 @@
 # Clai — Tasks
 
 Status key: **Pending** · **In progress** · **Blocked** · **Completed** (built, not yet
-proven) · **Verified** (a test or documented check passed). Last updated 2026-11-08.
+proven) · **Verified** (a test or documented check passed). Last updated 2026-11-09.
 
 ## Foundation
 
@@ -50,6 +50,20 @@ proven) · **Verified** (a test or documented check passed). Last updated 2026-1
 | `/talk`: upload, PDF viewer + highlight, evidence, text Q&A, summary, mobile tabs | Verified | Playwright desktop + mobile, 12/12 three runs in a row |
 | Backend-unreachable notice on `/talk` | Verified | `explains when no backend is reachable` |
 | Static export under `/clai/` | Verified | `scripts/check-static.mjs` |
+
+## Public product redesign (2026-11-09)
+
+| Task | Status | Evidence |
+|---|---|---|
+| Website audit | Completed | `docs/design/website-audit.md` |
+| Browser engine (no backend needed) | Verified | `tests/unit/engine.test.ts`; held-out 8/12, 0 wrong citations |
+| Dark identity, new mark, social previews | Verified | rendered and reviewed; mark revised after it read as "E" |
+| Progressive /talk with contextual panel | Verified | Playwright desktop + mobile, real engine, no mocks |
+| Browser voice (Web Speech API) | Completed | feature-detected; needs a manual test in Chrome/Safari with a real mic |
+| Product, how-it-works, technology, about, contact, privacy, terms, 404 | Verified | Playwright route test |
+| On-site docs (8 pages, search, TOC) | Verified | Playwright docs test |
+| Walkthrough video from the real app | Verified | `frontend/public/media` (28 s, captions) |
+| Static export of all routes under /clai | Verified | `scripts/check-static.mjs`, 18 routes + media |
 
 ## Release
 

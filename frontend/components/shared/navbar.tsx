@@ -11,7 +11,6 @@ import { Logo } from "./logo";
 export function Navbar() {
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
-  React.useEffect(() => setOpen(false), [pathname]);
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -73,13 +72,13 @@ export function Navbar() {
           <ul className="flex flex-col">
             {[...nav, { label: "Contact", href: "/contact" }].map((item) => (
               <li key={item.href} className="border-b border-line">
-                <Link href={item.href} className="display block py-4 text-[2rem]">
+                <Link href={item.href} onClick={() => setOpen(false)} className="display block py-4 text-[2rem]">
                   {item.label}
                 </Link>
               </li>
             ))}
           </ul>
-          <Link href="/talk" className="mt-auto inline-flex items-center justify-center gap-2 bg-ink py-4 font-medium text-bg">
+          <Link href="/talk" onClick={() => setOpen(false)} className="mt-auto inline-flex items-center justify-center gap-2 bg-ink py-4 font-medium text-bg">
             Open Clai <ArrowUpRight aria-hidden className="h-4 w-4" />
           </Link>
         </div>

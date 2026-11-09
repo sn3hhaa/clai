@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { repoFile, site } from "@/lib/site";
+import { asset } from "@/lib/utils";
 import { LogoMark } from "./logo";
 
 type FooterLink = { label: string; href: string };
@@ -89,9 +90,9 @@ export function Footer() {
       <div aria-hidden className="pointer-events-none select-none border-t border-line">
         <div className="mx-auto flex max-w-[1200px] items-end gap-[3vw] px-5 pt-10 md:px-8">
           <LogoMark className="mb-[1.4vw] h-[13vw] max-h-[150px] w-[13vw] max-w-[150px] text-ink/90" title="" />
-          <span className="font-sans text-[22vw] font-semibold leading-[0.74] tracking-[-0.07em] text-ink/90 md:text-[min(19vw,240px)]">
-            cla<span className="relative">ı<span className="absolute left-[0.03em] top-[0.07em] h-[0.11em] w-[0.4em] bg-mint" /></span>
-          </span>
+          {/* The outlined brand wordmark (exact geometry, including the sage i-dot). */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={asset("/brand/wordmark.svg")} alt="" className="h-[17vw] max-h-[190px] w-auto opacity-90" />
         </div>
       </div>
 

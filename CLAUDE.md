@@ -77,12 +77,13 @@ Frontend only: `cd frontend; npm run dev | npm test | npm run build`.
 
 ## Design principles (frontend)
 
-The website deliberately follows **sort.to's** look (the owner's explicit reference):
-white page, centred 1024 px column, STIX Two Text serif headings (40/48), Inter body,
-19 px grey lead, black pill buttons, 3×2 icon features, warm-grey cards (`#F5F4F1`),
-and full-bleed painted bands (Inness, public domain). Use original assets only. Mint is a
-small accent. The workspace keeps Geist Mono for clause/page references. GSAP is used
-sparingly and respects `prefers-reduced-motion`. Brand rules: `assets/branding/README.md`.
+Clai has its own **dark editorial identity**. sort.to is a quality benchmark only; never copy
+its layout or assets. Tokens live in `frontend/app/globals.css` (near-black `#0C0E0D`, warm
+off-white text, sage `#B8D9C6` used sparingly). Newsreader for display, Geist for body, Geist Mono
+for clause references. Vary section layouts; no generic AI aesthetics (orbs, gradients,
+glassmorphism, 3-card grids, fake stats). Customer pages describe outcomes; stack details belong
+on /technology and in the docs. The public /talk must work with the browser engine alone.
+Brand rules: `assets/branding/README.md`.
 
 ## Voice-agent constraints
 

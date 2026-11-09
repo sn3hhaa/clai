@@ -1,6 +1,6 @@
 # Publishes the website (static Next.js export) and the docs (MkDocs) to GitHub Pages:
 #   https://sn3hhaa.github.io/clai/        website
-#   https://sn3hhaa.github.io/clai/docs/   documentation
+#   https://sn3hhaa.github.io/clai/reference/   developer documentation (MkDocs)
 # The backend, voice worker and vector store can't run on Pages; /talk explains how to run them locally.
 name: Deploy to GitHub Pages
 
@@ -38,8 +38,8 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: /clai
           NEXT_PUBLIC_API_BASE_URL: ${{ vars.CLAI_API_URL }}
       - uses: astral-sh/setup-uv@v5
-      - name: Build the docs into /docs
-        run: uvx --python 3.12 --with-requirements docs/requirements.txt mkdocs build --strict --site-dir frontend/out/docs
+      - name: Build the developer docs into /reference
+        run: uvx --python 3.12 --with-requirements docs/requirements.txt mkdocs build --strict --site-dir frontend/out/reference
       - uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/out
