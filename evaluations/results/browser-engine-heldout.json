@@ -1,0 +1,145 @@
+{
+  "engine": "browser",
+  "questions": 12,
+  "correct": 8,
+  "accuracy": 0.667,
+  "rows": [
+    {
+      "id": "h01",
+      "question": "How much notice do I have to give to get out of this deal?",
+      "expected": "8.1",
+      "got": "insufficient",
+      "top": [
+        "3.2",
+        "10.1",
+        "8.1"
+      ],
+      "ok": false
+    },
+    {
+      "id": "h02",
+      "question": "What do I owe if the agreement is terminated?",
+      "expected": "8.3",
+      "got": "insufficient",
+      "top": [
+        "8.1",
+        "8.3",
+        "8.2"
+      ],
+      "ok": false
+    },
+    {
+      "id": "h03",
+      "question": "What's the penalty for paying an invoice late?",
+      "expected": "4.3",
+      "got": "insufficient",
+      "top": [
+        "4.3",
+        "4.2",
+        "8.3"
+      ],
+      "ok": false
+    },
+    {
+      "id": "h04",
+      "question": "Is the fee inclusive of tax?",
+      "expected": "4.1",
+      "got": "4.1",
+      "top": [
+        "4.1",
+        "4.3",
+        "4.2"
+      ],
+      "ok": true
+    },
+    {
+      "id": "h05",
+      "question": "Can the provider be held liable for lost profits?",
+      "expected": "7.1",
+      "got": "insufficient",
+      "top": [
+        "7.1",
+        "2.1",
+        "4.1"
+      ],
+      "ok": false
+    },
+    {
+      "id": "h06",
+      "question": "How should notices be sent?",
+      "expected": "10.1",
+      "got": "10.1",
+      "top": [
+        "10.1",
+        "8.1",
+        "8.2"
+      ],
+      "ok": true
+    },
+    {
+      "id": "h07",
+      "question": "Who keeps the pre-existing tools?",
+      "expected": "6.1",
+      "got": "6.1",
+      "top": [
+        "6.1",
+        "5.1"
+      ],
+      "ok": true
+    },
+    {
+      "id": "h08",
+      "question": "Do we have to negotiate before going to court?",
+      "expected": "9.2",
+      "got": "9.2",
+      "top": [
+        "9.2",
+        "7.2",
+        "3.2"
+      ],
+      "ok": true
+    },
+    {
+      "id": "h09",
+      "question": "Is there a probation period for new hires?",
+      "expected": "abstain",
+      "got": "insufficient",
+      "top": [
+        "3.2"
+      ],
+      "ok": true
+    },
+    {
+      "id": "h10",
+      "question": "Who pays for travel expenses?",
+      "expected": "abstain",
+      "got": "insufficient",
+      "top": [
+        "4.1",
+        "4.3",
+        "4.2"
+      ],
+      "ok": true
+    },
+    {
+      "id": "h11",
+      "question": "How careful must the receiving party be with information?",
+      "expected": "2.1",
+      "got": "2.1",
+      "top": [
+        "2.1",
+        "1.1",
+        "3.2"
+      ],
+      "ok": true
+    },
+    {
+      "id": "h12",
+      "question": "Which court has jurisdiction?",
+      "expected": "abstain",
+      "got": "insufficient",
+      "top": [],
+      "ok": true
+    }
+  ]
+}

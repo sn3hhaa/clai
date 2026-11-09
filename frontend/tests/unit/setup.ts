@@ -9,6 +9,8 @@ class ResizeObserverStub {
 }
 globalThis.ResizeObserver = ResizeObserverStub as unknown as typeof ResizeObserver;
 
+// Node-environment test files (e.g. the engine evaluation) have no window.
+if (typeof window !== "undefined") {
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: vi.fn().mockImplementation((query: string) => ({
@@ -20,3 +22,4 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 HTMLCanvasElement.prototype.getContext = vi.fn(() => null) as unknown as HTMLCanvasElement["getContext"];
+}

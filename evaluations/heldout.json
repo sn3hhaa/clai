@@ -1,0 +1,21 @@
+{
+  "description": "Held-out questions written after the browser engine was tuned on questions.json. Run once; results are reported as-is and must not be used for tuning.",
+  "documents": {
+    "services": "backend/tests/fixtures/services_agreement.pdf",
+    "nda": "backend/tests/fixtures/mutual_nda.pdf"
+  },
+  "questions": [
+    { "id": "h01", "doc": "services", "q": "How much notice do I have to give to get out of this deal?", "expect_clause": "8.1", "expect_text": ["30 days"] },
+    { "id": "h02", "doc": "services", "q": "What do I owe if the agreement is terminated?", "expect_clause": "8.3", "expect_text": ["Services performed"] },
+    { "id": "h03", "doc": "services", "q": "What's the penalty for paying an invoice late?", "expect_clause": "4.3", "expect_text": ["1.5%"] },
+    { "id": "h04", "doc": "services", "q": "Is the fee inclusive of tax?", "expect_clause": "4.1", "expect_text": ["exclusive of applicable taxes"] },
+    { "id": "h05", "doc": "services", "q": "Can the provider be held liable for lost profits?", "expect_clause": "7.1", "expect_text": ["loss of profit"] },
+    { "id": "h06", "doc": "services", "q": "How should notices be sent?", "expect_clause": "10.1", "expect_text": ["email"] },
+    { "id": "h07", "doc": "services", "q": "Who keeps the pre-existing tools?", "expect_clause": "6.1", "expect_text": ["pre-existing tools"] },
+    { "id": "h08", "doc": "services", "q": "Do we have to negotiate before going to court?", "expect_clause": "9.2", "expect_text": ["negotiation"] },
+    { "id": "h09", "doc": "services", "q": "Is there a probation period for new hires?", "abstain": true },
+    { "id": "h10", "doc": "services", "q": "Who pays for travel expenses?", "abstain": true },
+    { "id": "h11", "doc": "nda", "q": "How careful must the receiving party be with information?", "expect_clause": "2.1", "expect_text": ["reasonable care"] },
+    { "id": "h12", "doc": "nda", "q": "Which court has jurisdiction?", "abstain": true }
+  ]
+}
