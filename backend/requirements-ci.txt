@@ -144,7 +144,7 @@ jiter==0.19.0
     # via openai
 joblib==1.6.0
     # via scikit-learn
-json-repair==0.63.5
+json-repair==0.64.9
     # via livekit-agents
 jsonpatch==1.44
     # via langchain-core
